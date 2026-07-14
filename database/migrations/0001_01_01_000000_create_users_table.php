@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('fname');
+            $table->string('lname');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone');
+            $table->enum('gender', ['male', 'female']);
+            $table->string('profile_image')->nullable();
+            $table->enum('role', ['student', 'owner', 'admin'])->default('student');
+            $table->enum('status', ['pending', 'active', 'blocked'])->default('active');
+            $table->string('national_id')->nullable();
+            $table->string('national_id_image')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -47,3 +54,4 @@ return new class extends Migration
         Schema::dropIfExists('sessions');
     }
 };
+
