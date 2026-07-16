@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Admin;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+
+class AuthController extends Controller
+{
+    // ── REGISTER ──
+    public function register(Request $request)
+    {
+        $request->validate([
+            'fname'    => 'required|string|max:255',
+            'lname'    => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|string|min:8',
+            'phone'    => 'required|string',
+            'gender'   => 'required|in:male,female',
+            'role'     => 'required|in:student,owner',
+            'national_id' => 'nullable|string|max:14',
+            'national_id_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+
+    $user = User::create([
+    'fname'             => $request->fname,
+    'lname'             => $request->lname,
+    'email'             => $request->email,
+    'password'          => Hash::make($request->password),
+    'phone'             => $request->phone,
+    'gender'            => $request->gender,
+    'role'              => $request->role,
+    'status'            => $request->role === 'owner' ? 'pending' : 'active',
+    'national_id'       => $request->national_id,
+    'national_id_image' => $request->hasFile('national_id_image')
+        ? $request->file('national_id_image')->store('national_ids', 'public')
+        : null,
+]);
+        return response()->json([
+            'success' => true,
+            'message' => 'تم التسجيل بنجاح',
+            'user'    => $user,
+        ], 201);
+    }
+
+    // ── USER LOGIN ──
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'بيانات غلط',
+            ], 401);
+        }
+
+        if ($user->status !== 'active') {
+            return response()->json([
+                'success' => false,
+                'message' => 'الحساب مش مفعل',
+            ], 403);
+        }
+
+        $token = $user->createToken('user_token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'token'   => $token,
+            'user'    => [
+    'id'   => $user->id,
+    'name' => $user->full_name, // ✅ كدا هيجيب الاسم الأول والأخير مدمجين مع بعض بطريقة نضيفة
+    'role' => $user->role,
+
+            ],
+        ]);
+    }
+
+    // ── ADMIN LOGIN ──
+    public function adminLogin(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $admin = Admin::where('email', $request->email)->first();
+
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'بيانات غلط',
+            ], 401);
+        }
+
+        $token = $admin->createToken('admin_token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'token'   => $token,
+            'admin'   => [
+                'id'   => $admin->id,
+                'name' => $admin->name,
+            ],
+        ]);
+    }
+
+    // ── LOGOUT ──
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم تسجيل الخروج',
+        ]);
+    }
+
+    // ── ME ──
+    public function me(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'user'    => $request->user(),
+        ]);
+    }
+}

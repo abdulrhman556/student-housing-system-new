@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone');
             $table->enum('gender', ['male', 'female']);
             $table->string('profile_image')->nullable();
-            $table->enum('role', ['student', 'owner', 'admin'])->default('student');
+            $table->enum('role', ['student', 'owner'])->default('student');
             $table->enum('status', ['pending', 'active', 'blocked'])->default('active');
             $table->string('national_id')->nullable();
             $table->string('national_id_image')->nullable();
