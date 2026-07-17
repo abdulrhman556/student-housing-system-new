@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Property extends Model
 {
@@ -53,11 +54,11 @@ class Property extends Model
     /**
      * ميزة إضافية لجلب الصورة الرئيسية للعقار مباشرة
      */
-    public function coverImage()
-    {
-        return $this->hasOne(PropertyImage::class)->where('is_cover', true);
-    }
-
+public function coverImage(): HasOne
+{
+    return $this->hasOne(PropertyImage::class)
+        ->where('is_cover', true);
+}
     /**
      * علاقة العقار بالمرافق (أطراف بأطراف - Many to Many)
      * ملاحظة: هذه العلاقة تفترض وجود جدول وسيط باسم amenity_property
@@ -66,6 +67,16 @@ public function amenities(): BelongsToMany
 {
     // مررنا اسم الجدول الوسيط 'property_amenities' كبرامتر ثانٍ
     return $this->belongsToMany(Amenity::class, 'property_amenities');
+}
+
+public function units(): HasMany
+{
+    return $this->hasMany(Unit::class);
+}
+
+public function reviews(): HasMany
+{
+    return $this->hasMany(Review::class);
 }
 
 }

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'status',
         'national_id',
         'national_id_image',
+        'university_id',
     ];
 
     /**

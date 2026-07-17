@@ -23,6 +23,8 @@ class AuthController extends Controller
             'role'     => 'required|in:student,owner',
             'national_id' => 'nullable|string|max:14',
             'national_id_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'university_id'     => 'required_if:role,student|nullable|exists:universities,id',
+
         ]);
 
 
@@ -39,6 +41,8 @@ class AuthController extends Controller
     'national_id_image' => $request->hasFile('national_id_image')
         ? $request->file('national_id_image')->store('national_ids', 'public')
         : null,
+
+        'university_id'     => $request->role === 'student' ? $request->university_id : null,
 ]);
         return response()->json([
             'success' => true,

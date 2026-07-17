@@ -2,34 +2,49 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\AdminController;
 
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
-
+// ==========================================
+// 🔓 Public Routes (متاحة للجميع بدون تسجيل دخول)
+// ==========================================
 Route::post('/auth/register',    [AuthController::class, 'register']);
 Route::post('/auth/login',       [AuthController::class, 'login']);
 Route::post('/auth/admin-login', [AuthController::class, 'adminLogin']);
 
+Route::get('/properties',        [PropertyController::class, 'index']);
+Route::get('/properties/{id}',   [PropertyController::class, 'show']);
+
+
+// ==========================================
+// 🔒 Protected Routes (تحتاج Token - Sanctum)
+// ==========================================
 Route::middleware('auth:sanctum')->group(function () {
 
+    // ── Auth Actions ──
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me',      [AuthController::class, 'me']);
 
-    Route::middleware('role:student')->group(function () {
-        Route::post('/bookings',     [BookingController::class, 'store']);
-        Route::get('/bookings/my',   [BookingController::class, 'myBookings']);
-    });
 
+    // ── 🏠 Owner Routes ──
     Route::middleware('role:owner')->group(function () {
+        Route::get('/my-properties',      [PropertyController::class, 'myProperties']);
         Route::post('/properties',        [PropertyController::class, 'store']);
         Route::put('/properties/{id}',    [PropertyController::class, 'update']);
         Route::delete('/properties/{id}', [PropertyController::class, 'destroy']);
     });
 
+    // ── 👑 Admin Routes ──
     Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/users',                     [AdminController::class, 'users']);
-        Route::patch('/admin/properties/{id}/approve', [AdminController::class, 'approve']);
+        
+        // التحكم في قبول/رفض العقارات من الـ PropertyController
+        Route::patch('/admin/properties/{id}/approve', [PropertyController::class, 'approve']);
+        Route::patch('/admin/properties/{id}/reject',  [PropertyController::class, 'reject']);
     });
 });
-
-Route::get('/properties',      [PropertyController::class, 'index']);
-Route::get('/properties/{id}', [PropertyController::class, 'show']);
