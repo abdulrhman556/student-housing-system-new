@@ -31,6 +31,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me',      [AuthController::class, 'me']);
 
+// // Mohamed
+// use App\Http\Controllers\Api\BookingController;
+// Route::apiResource('bookings', BookingController::class);
+// // Mohamed
+
+
+
 
     // ── 🏠 Owner Routes ──
     Route::middleware('role:owner')->group(function () {
@@ -42,7 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── 👑 Admin Routes ──
     Route::middleware('role:admin')->group(function () {
-        
+
         // التحكم في قبول/رفض العقارات من الـ PropertyController
         Route::patch('/admin/properties/{id}/approve', [PropertyController::class, 'approve']);
         Route::patch('/admin/properties/{id}/reject',  [PropertyController::class, 'reject']);
