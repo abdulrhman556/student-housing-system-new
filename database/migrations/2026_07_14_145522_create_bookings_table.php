@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('unit_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('admin_id')
+                ->nullable()
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->enum('status', [
                 'pending',
                 'contacting_owner',

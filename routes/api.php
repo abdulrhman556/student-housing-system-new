@@ -2,7 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\PropertyController;
 
+
+// Mohamed
+use App\Http\Controllers\Api\BookingController;
+Route::apiResource('bookings', BookingController::class);
+// Mohamed
 
 
 Route::post('/auth/register',    [AuthController::class, 'register']);
@@ -18,18 +25,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/bookings',     [BookingController::class, 'store']);
         Route::get('/bookings/my',   [BookingController::class, 'myBookings']);
     });
-
-    Route::middleware('role:owner')->group(function () {
-        Route::post('/properties',        [PropertyController::class, 'store']);
-        Route::put('/properties/{id}',    [PropertyController::class, 'update']);
-        Route::delete('/properties/{id}', [PropertyController::class, 'destroy']);
-    });
-
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/users',                     [AdminController::class, 'users']);
-        Route::patch('/admin/properties/{id}/approve', [AdminController::class, 'approve']);
-    });
 });
-
-Route::get('/properties',      [PropertyController::class, 'index']);
-Route::get('/properties/{id}', [PropertyController::class, 'show']);
