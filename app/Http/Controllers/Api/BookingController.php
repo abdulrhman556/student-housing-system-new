@@ -8,13 +8,52 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Models\Booking;
 use Illuminate\Http\JsonResponse;
 
+use App\Models\Unit;
+use Illuminate\Support\Facades\DB;
+use App\Services\BookingService;
+
 class BookingController extends Controller
 {
-    public function store(StoreBookingRequest $request): JsonResponse {
-        $data = $request->validated();
-        $data['student_id'] = 1; // $data['student_id'] = auth()->id();
-        $booking = Booking::create($data);
-        return response()->json($booking, 201);
+    // Store a new booking .
+
+    public function store(
+        StoreBookingRequest $request,
+        BookingService $bookingService
+    ): JsonResponse {
+        try {
+            $booking = $bookingService->store($request->validated());
+
+            return response()->json([
+                'message' => 'Booking created successfully.',
+                'data' => $booking,
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    
+    public function index()
+    {
+
+    }
+
+    public function show(Booking $booking)
+    {
+
+    }
+
+    public function update(Request $request, Booking $booking)
+    {
+
+    }
+
+    public function destroy(Booking $booking)
+    {
+
     }
 
 }
