@@ -1,59 +1,129 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Http\Requests\StoreBookingRequest;
+use App\Http\Requests\UpdateBookingStatusRequest;
+use App\Http\Resources\BookingResource;
 use App\Models\Booking;
-use Illuminate\Http\JsonResponse;
-
-use App\Models\Unit;
-use Illuminate\Support\Facades\DB;
 use App\Services\BookingService;
+use Illuminate\Http\JsonResponse;
 
 class BookingController extends Controller
 {
-    // Store a new booking .
+    public function __construct(
+        protected BookingService $bookingService
+    ) {}
 
-    public function store(
-        StoreBookingRequest $request,
-        BookingService $bookingService
-    ): JsonResponse {
+    /**
+     * Display all bookings.
+     */
+    public function index()
+    {
+        $bookings = $this->bookingService->index();
+
+        return BookingResource::collection($bookings);
+    }
+
+    /**
+     * Store a new booking.
+     */
+    public function store(StoreBookingRequest $request): JsonResponse
+    {
         try {
-            $booking = $bookingService->store($request->validated());
+            $booking = $this->bookingService->store($request->validated());
 
             return response()->json([
+                'success' => true,
                 'message' => 'Booking created successfully.',
-                'data' => $booking,
+                'data' => new BookingResource($booking),
             ], 201);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+
             return response()->json([
+                'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
         }
     }
 
-    
-    public function index()
+    /**
+     * Display a booking.
+     */
+    public function show(Booking $booking): BookingResource
     {
-
+        return new BookingResource(
+            $this->bookingService->show($booking)
+        );
     }
 
-    public function show(Booking $booking)
-    {
+    /**
+     * Update booking status.
+     */
+    public function updateStatus(
+        UpdateBookingStatusRequest $request,
+        Booking $booking
+    ): JsonResponse {
 
+        try {
+
+            $booking = $this->bookingService->updateStatus(
+                $booking,
+                $request->validated()['status'],
+                $request->validated()
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking status updated successfully.',
+                'data' => new BookingResource($booking),
+            ]);
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+
+        }
     }
 
-    public function update(Request $request, Booking $booking)
+    /**
+     * Cancel booking.
+     */
+    public function cancel(Booking $booking): JsonResponse
     {
+        try {
 
+            $booking = $this->bookingService->cancel($booking);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking cancelled successfully.',
+                'data' => new BookingResource($booking),
+            ]);
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+
+        }
     }
 
-    public function destroy(Booking $booking)
+    /**
+     * Booking history.
+     */
+    public function history(Booking $booking): JsonResponse
     {
-
+        return response()->json([
+            'success' => true,
+            'data' => $this->bookingService->history($booking),
+        ]);
     }
-
 }

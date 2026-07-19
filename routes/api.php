@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +43,44 @@ Route::middleware('auth:sanctum')->group(function () {
     // ==========================
     // Student
     // ==========================
-// Mohamed
-Route::apiResource('bookings', BookingController::class);
-// Mohamed    // ==========================
+
+
+    // Mohammed: Added routes for bookings and favorites
+
+    // Booking
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::post('/bookings', [BookingController::class, 'store']);
+    Route::get('/bookings/{booking}', [BookingController::class, 'show']);
+    Route::patch('/bookings/{booking}', [BookingController::class, 'update']);
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy']);
+    // Booking
+
+    // Favorites
+    Route::apiResource('favorites', FavoriteController::class)
+        ->only(['index', 'store', 'destroy']);
+    Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('favorites', FavoriteController::class)
+        ->only(['index', 'store', 'destroy']); });
+    // Favorites
+
+    // Notifications
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/unread', [NotificationController::class, 'unread']);
+        Route::patch(
+            '/{notification}/read',
+            [NotificationController::class, 'markAsRead']
+        );
+        Route::delete(
+            '/{notification}',
+            [NotificationController::class, 'destroy']
+        );
+    });
+    // Notifications
+
+    // Mohammed: Added routes for bookings and favorites
+
+    // ==========================
     // Owner
     // ==========================
     Route::middleware('role:owner')->group(function () {

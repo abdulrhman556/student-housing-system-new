@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBookingRequest extends FormRequest
+class UpdateBookingStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,20 +23,10 @@ class StoreBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unit_id' => [
+            'status' => [
                 'required',
-                'integer',
-                'exists:units,id',
-            ],
-            'check_in_date' => [
-                'required',
-                'date',
-                'after_or_equal:today',
-            ],
-            'student_id' => [
-                'nullable',
-                'integer',
-                'exists:users,id',
+                'string',
+                'in:pending,contacting_owner,contacting_student,completed,cancelled',
             ],
             'admin_id' => [
                 'nullable',
@@ -50,17 +40,13 @@ class StoreBookingRequest extends FormRequest
             ],
         ];
     }
+
     public function messages(): array
     {
         return [
-            'unit_id.required' => 'The unit ID is required.',
-            'unit_id.integer' => 'The unit ID must be an integer.',
-            'unit_id.exists' => 'The selected unit does not exist.',
-            'check_in_date.required' => 'The check-in date is required.',
-            'check_in_date.date' => 'The check-in date must be a valid date.',
-            'check_in_date.after_or_equal' => 'The check-in date must be today or a future date.',
-            'student_id.integer' => 'The student ID must be an integer.',
-            'student_id.exists' => 'The selected student does not exist.',
+            'status.required' => 'The status is required.',
+            'status.string' => 'The status must be a string.',
+            'status.in' => 'The selected status is invalid.',
             'admin_id.integer' => 'The admin ID must be an integer.',
             'admin_id.exists' => 'The selected admin does not exist.',
             'note.string' => 'The note must be a string.',
