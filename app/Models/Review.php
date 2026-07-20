@@ -6,20 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    // use HasFactory;
-
     protected $fillable = [
         'booking_id',
         'student_id',
+        'property_id',
         'rating',
         'comment',
     ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
 
     public function booking()
     {
@@ -28,6 +21,16 @@ class Review extends Model
 
     public function student()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class,'student_id');
+    }
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

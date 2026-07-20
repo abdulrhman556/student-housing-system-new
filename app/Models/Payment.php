@@ -34,8 +34,13 @@ class Payment extends Model
         return $this->hasMany(Payment::class, 'verified_by');
     }
 
-    public function payment()
+    // public function payment()
+    // {
+    //     return $this->hasOne(Payment::class);
+    // }
+
+    public function payments()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasMany(Payment::class);
     }
 }
