@@ -20,10 +20,10 @@ return new class extends Migration
                 ->constrained('users');
             $table->enum('status', [
                 'pending',
-                'contacting_owner',
-                'contacting_student',
+                'availability_confirmed',
                 'completed',
-                'cancelled'
+                'cancelled',
+                'rejected',
             ]);
             $table->text('note')->nullable();
             $table->timestamps();

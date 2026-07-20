@@ -11,6 +11,7 @@ class FavoriteService
 {
     public function store(array $data): Favorite
     {
+        // commented 
         $studentId = auth()->id() ?? 1;
 
         Property::findOrFail($data['property_id']);

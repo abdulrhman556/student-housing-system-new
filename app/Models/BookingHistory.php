@@ -6,5 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class BookingHistory extends Model
 {
-    //
+    protected $fillable = [
+        'booking_id',
+        'admin_id',
+        'status',
+        'note',
+    ];
+
+    protected $casts = [
+        'status' => 'string',
+        'note' => 'string',
+    ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
 }

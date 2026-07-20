@@ -58,8 +58,6 @@ class BookingService
                 'check_in_date' => $checkInDate,
             ]);
 
-            $unit->decrement('available_count');
-
             $this->createHistory($booking, $data['admin_id'] ?? null, 'pending', $data['note'] ?? 'Booking created.');
             $this->notifyAdmin($booking, $data['admin_id'] ?? null);
 
@@ -82,16 +80,11 @@ class BookingService
         return $bookingModel->load(['student', 'property', 'unit', 'history']);
     }
 
-    public function cancel(Booking|int $booking, array $data = []): Booking
-    {
-        return $this->updateStatus($booking, 'cancelled', $data);
-    }
-
     public function updateStatus(Booking|int $booking, string $status, array $data = []): Booking
     {
         $bookingModel = $this->resolveBooking($booking);
 
-        if (! in_array($status, ['pending', 'contacting_owner', 'contacting_student', 'completed', 'cancelled'], true)) {
+        if (! in_array($status, ['pending', 'availability_confirmed', 'completed', 'cancelled', 'rejected'], true)) {
             throw new InvalidArgumentException('Invalid booking status.');
         }
 
@@ -132,6 +125,21 @@ class BookingService
         $bookingModel = $this->resolveBooking($booking);
 
         return $bookingModel->history()->latest()->get();
+    }
+
+    public function cancel(Booking|int $booking): Booking
+    {
+        $bookingModel = $this->resolveBooking($booking);
+
+        $studentId = auth()->id();
+
+        if ($studentId && (int) $bookingModel->student_id !== (int) $studentId) {
+            throw new RuntimeException('You are not authorized to cancel this booking.');
+        }
+
+        return $this->updateStatus($bookingModel, 'cancelled', [
+            'note' => 'Booking cancelled by student.',
+        ]);
     }
 
     protected function resolveBooking(Booking|int $booking): Booking

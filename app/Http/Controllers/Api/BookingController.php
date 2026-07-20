@@ -126,4 +126,5 @@ class BookingController extends Controller
             'data' => $this->bookingService->history($booking),
         ]);
     }
+
 }
