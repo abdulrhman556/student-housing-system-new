@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AdminBookingController;
+use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\NotificationController;
@@ -69,8 +70,9 @@ Route::middleware('auth:sanctum')->group(function () {
     'admin/bookings/{booking}/confirm',
     [AdminBookingController::class,'confirmAvailability']);
     Route::patch(
-    'admin/bookings/{booking}/reject',
-    [AdminBookingController::class,'reject']);
+        'admin/bookings/{booking}/reject',
+        [AdminBookingController::class,'reject']);
+    Route::apiResource('bookings', BookingController::class);
     // Booking
 
     // Favorites
@@ -117,19 +119,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Mohammed: Added routes for bookings and favorites
 
+
+
+
     // ==========================
 Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile',                 [ProfileController::class, 'update']);
     Route::patch('/profile/change-password', [ProfileController::class, 'changePassword']);
 });
-
-
-
-// Mohamed
-Route::apiResource('bookings', BookingController::class);
-// Mohamed
-
-
 
 
 
@@ -170,6 +167,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/admin/bookings/{booking}/reject', [AdminBookingController::class, 'reject']);
         Route::patch('/admin/bookings/{booking}/cancel', [AdminBookingController::class, 'cancel']);
         // Admin booking management
+
+        Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
 
     });
 
