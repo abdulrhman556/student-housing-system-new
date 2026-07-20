@@ -15,6 +15,7 @@ class PropertyImage extends Model
         'image',
         'is_cover',
         'display_order',
+        'public_id',
     ];
 
     protected $casts = [

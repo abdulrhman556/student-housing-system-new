@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class PropertyController extends Controller
 {
@@ -149,20 +150,28 @@ class PropertyController extends Controller
 
         // الصور
         foreach ($request->file('images') as $index => $image) {
+              $uploaded = cloudinary()
+                  ->uploadApi()
+                  ->upload(
+                      $image->getRealPath(),
+                      [
+                          'folder' => 'properties',
+                      ]
+                  );
 
-            $property->images()->create([
-
-                'image' => $image->store('properties', 'public'),
-
-                'is_cover' => $index == 0,
-
+              $property->images()->create([
+                'image'         => $uploaded['secure_url'],
+                'public_id'     => $uploaded['public_id'],
+                'is_cover'      => $index == 0,
                 'display_order' => $index + 1,
+]);
 
-            ]);
 
-        }
+}
 
-        return response()->json([
+
+
+           return response()->json([
 
             'success' => true,
 
@@ -180,6 +189,8 @@ class PropertyController extends Controller
     // ===========================
     public function update(Request $request, $id)
     {
+
+
         $property = Property::where('owner_id', auth()->id())->find($id);
 
         if (!$property) {
@@ -188,6 +199,7 @@ class PropertyController extends Controller
                 'message' => 'العقار غير موجود أو ليس من ممتلكاتك'
             ], 404);
         }
+
 
         $request->validate([
 
@@ -245,27 +257,36 @@ class PropertyController extends Controller
 
         }
 
-        // لو رفع صور جديدة
-        if ($request->hasFile('images')) {
+            if ($request->hasFile('images')) {
+                foreach ($property->images as $image) {
+               cloudinary()
+              ->uploadApi()
+            ->destroy($image->public_id);
+                }
 
-            // حذف الصور القديمة
-            $property->images()->delete();
+                $property->images()->delete();
 
-            foreach ($request->file('images') as $index => $image) {
+                foreach ($request->file('images') as $index => $image) {
+                  $uploaded = cloudinary()
+                 ->uploadApi()
+                 ->upload(
+                     $image->getRealPath(),
+                     [
+                         'folder' => 'properties',
+                     ]
+                 );
 
-                $property->images()->create([
-
-                    'image' => $image->store('properties', 'public'),
-
-                    'is_cover' => $index == 0,
-
-                    'display_order' => $index + 1,
-
-                ]);
+               $property->images()->create([
+                 'image'         => $uploaded['secure_url'],
+                 'public_id'     => $uploaded['public_id'],
+                 'is_cover'      => $index == 0,
+                 'display_order' => $index + 1,
+]);
+                }
             }
-        }
 
-        return response()->json([
+
+                    return response()->json([
 
             'success' => true,
 
@@ -277,7 +298,10 @@ class PropertyController extends Controller
             ])
 
         ]);
+
+        $property->refresh();
     }
+
 
     // ===========================
     // حذف عقار
@@ -294,21 +318,20 @@ public function destroy($id)
         ], 404);
     }
 
-    // حذف ملفات الصور من Storage
-    foreach ($property->images as $image) {
-        Storage::disk('public')->delete($image->image);
-    }
+        foreach ($property->images as $image) {
+                 cloudinary()
+                ->uploadApi()
+                ->destroy($image->public_id);
+                    }
 
-    // حذف سجلات الصور من قاعدة البيانات
-    $property->images()->delete();
+        $property->images()->delete();
+        $property->delete();
 
-    // حذف العقار
-    $property->delete();
 
-    return response()->json([
-        'success' => true,
-        'message' => 'تم حذف العقار بنجاح'
-    ]);
+        return response()->json([
+                'success' => true,
+                'message' => 'تم حذف العقار بنجاح'
+            ]);
 }
 
 
@@ -341,31 +364,32 @@ public function destroy($id)
     // ===========================
     // رفض العقار
     // ===========================
-    public function reject(Request $request, $id)
-    {
-        $request->validate([
-            'rejection_reason' => 'required|string'
-        ]);
+public function reject(Request $request, $id)
+{
+    $request->validate([
+        'rejection_reason' => 'required|string'
+    ]);
 
-        $property = Property::find($id);
+    $property = Property::find($id);
 
-        if (!$property) {
-            return response()->json([
-                'success' => false,
-                'message' => 'العقار غير موجود'
-            ], 404);
-        }
-
-        $property->update([
-            'status' => 'rejected',
-            'rejection_reason' => $request->rejection_reason,
-        ]);
-
+    if (!$property) {
         return response()->json([
-            'success' => true,
-            'message' => 'تم رفض العقار'
-        ]);
+            'success' => false,
+            'message' => 'العقار غير موجود'
+        ], 404);
     }
+
+    $property->update([
+        'status' => 'rejected',
+        'rejection_reason' => $request->rejection_reason,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'تم رفض العقار'
+    ]);
+}
+
 
     // ===========================
     // عقارات صاحب السكن

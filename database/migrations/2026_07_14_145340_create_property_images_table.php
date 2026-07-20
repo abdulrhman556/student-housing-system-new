@@ -20,6 +20,8 @@ return new class extends Migration
             $table->boolean('is_cover')->default(false);
             $table->integer('display_order')->default(1);
             $table->timestamps();
+
+            $table->string('public_id')->nullable();
         });
     }
 
