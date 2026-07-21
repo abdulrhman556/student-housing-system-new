@@ -68,7 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bookings/{booking}/history', [BookingController::class, 'history']);
 
 
-    
+
     // Route::patch(
     // 'admin/bookings/{booking}/confirm',
     // [AdminBookingController::class,'confirmAvailability']);
