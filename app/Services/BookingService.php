@@ -200,27 +200,22 @@ public function show(Booking|int $booking): Booking
         ]);
     }
 
-    protected function resolveAdminId(?int $adminId = null): int
-    {
-        if ($adminId) {
-            return $adminId;
-        }
-
-        $admin = User::query()->where('role', 'admin')->first();
-
-        if ($admin) {
-            return $admin->id;
-        }
-
-        $fallbackAdminId = User::query()->value('id');
-
-        if ($fallbackAdminId) {
-            return $fallbackAdminId;
-        }
-
-        throw new RuntimeException('No admin user available for this action.');
+protected function resolveAdminId(?int $adminId = null): int
+{
+    if ($adminId) {
+        return $adminId;
     }
 
-    public function __construct(
+    $admin = \App\Models\Admin::query()->first();
+
+    if ($admin) {
+        return $admin->id;
+    }
+
+    throw new RuntimeException('No admin user available for this action.');
+}
+
+
+public function __construct(
     protected NotificationService $notificationService) {}
 }
