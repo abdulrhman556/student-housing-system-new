@@ -15,7 +15,9 @@ class ReviewService
      */
     public function create(array $data, int $studentId): Review
     {
-        $booking = Booking::query()->findOrFail($data['booking_id']);
+        $booking = Booking::query()
+            ->with('unit')
+            ->findOrFail($data['booking_id']);
 
         if ((int) $booking->student_id !== $studentId) {
             throw new RuntimeException('You are not authorized to review this booking.');
@@ -30,13 +32,18 @@ class ReviewService
             throw new RuntimeException('A review already exists for this booking.');
         }
 
-        return DB::transaction(function () use ($booking, $data, $studentId): Review {
+return DB::transaction(function () use ($booking, $data, $studentId): Review {
+
+    if (!$booking->unit || !$booking->unit->property_id) {
+        throw new RuntimeException('The booking is not linked to a valid property.');
+    }
+
             return Review::query()->create([
-                'booking_id' => $booking->id,
-                'student_id' => $studentId,
-                'property_id' => $booking->property_id,
-                'rating' => $data['rating'],
-                'comment' => $data['comment'] ?? null,
+                'booking_id'  => $booking->id,
+                'student_id'  => $studentId,
+                'property_id' => $booking->unit->property_id,
+                'rating'      => $data['rating'],
+                'comment'     => $data['comment'] ?? null,
             ]);
         });
     }
