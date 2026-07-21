@@ -52,7 +52,6 @@ class BookingService
             $booking = Booking::query()->create([
                 'student_id' => $studentId,
                 'unit_id' => $unit->id,
-                'property_id' => $unit->property_id,
                 'status' => 'pending',
                 'booking_date' => now()->toDateString(),
                 'check_in_date' => $checkInDate,
@@ -61,24 +60,38 @@ class BookingService
             $this->createHistory($booking, $data['admin_id'] ?? null, 'pending', $data['note'] ?? 'Booking created.');
             $this->notifyAdmin($booking, $data['admin_id'] ?? null);
 
-            return $booking->fresh(['student', 'property', 'unit', 'history']);
+return $booking->fresh([
+    'student',
+    'unit.property',
+    'history']);
+
         });
     }
 
     public function index()
     {
         return Booking::query()
-            ->with(['student', 'property', 'unit', 'history'])
+->with([
+    'student',
+    'unit.property',
+    'history'
+])
             ->latest()
             ->get();
     }
 
-    public function show(Booking|int $booking): Booking
-    {
-        $bookingModel = $this->resolveBooking($booking);
+public function show(Booking|int $booking): Booking
+{
+    $bookingModel = $this->resolveBooking($booking);
 
-        return $bookingModel->load(['student', 'property', 'unit', 'history']);
-    }
+    return $bookingModel->load([
+        'student',
+        'unit.property',
+        'history'
+    ]);
+}
+
+
 
     public function updateStatus(Booking|int $booking, string $status, array $data = []): Booking
     {
@@ -116,7 +129,7 @@ class BookingService
                 $this->notifyStudent($bookingModel, $status);
             }
 
-            return $bookingModel->fresh(['student', 'property', 'unit', 'history']);
+            return $bookingModel->fresh(['student',  'unit.property', 'unit', 'history']);
         });
     }
 

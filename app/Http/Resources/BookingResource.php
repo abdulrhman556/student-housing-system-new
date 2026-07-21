@@ -26,13 +26,14 @@ class BookingResource extends JsonResource
                     'email' => $this->student->email,
                 ];
             }),
-            'property' => $this->whenLoaded('property', function () {
-                return [
-                    'id' => $this->property->id,
-                    'title' => $this->property->title,
-                ];
-            }),
-            'unit' => $this->whenLoaded('unit', function () {
+            'property' => $this->whenLoaded('unit', function () {
+                return $this->unit && $this->unit->property ? [
+                    'id' => $this->unit->property->id,
+                    'title' => $this->unit->property->title,
+                ] : null;
+}),
+
+                'unit' => $this->whenLoaded('unit', function () {
                 return [
                     'id' => $this->unit->id,
                     'type' => $this->unit->unit_type,

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BookingHistory extends Model
 {
+    protected $table = 'booking_history';
     protected $fillable = [
         'booking_id',
         'admin_id',
@@ -17,6 +18,7 @@ class BookingHistory extends Model
         'status' => 'string',
         'note' => 'string',
     ];
+
 
     public function booking()
     {

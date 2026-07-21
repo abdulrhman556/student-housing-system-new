@@ -14,7 +14,6 @@ class Booking extends Model
     protected $fillable = [
         'student_id',
         'unit_id',
-        'property_id',
         'status',
         'booking_date',
         'check_in_date',
@@ -30,10 +29,6 @@ class Booking extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    public function property()
-    {
-        return $this->belongsTo(Property::class);
-    }
 
     public function history()
     {

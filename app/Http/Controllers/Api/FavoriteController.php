@@ -47,13 +47,20 @@ class FavoriteController extends Controller
         }
     }
 
-    public function destroy(Favorite $favorite): JsonResponse
-    {
-        $this->favoriteService->destroy($favorite);
-
+public function destroy(Favorite $favorite): JsonResponse
+{
+    if ($favorite->student_id != auth()->id()) {
         return response()->json([
-            'success' => true,
-            'message' => 'Property removed from favorites.',
-        ]);
+            'success' => false,
+            'message' => 'Unauthorized.'
+        ], 403);
     }
+
+    $this->favoriteService->destroy($favorite);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Property removed from favorites.',
+    ]);
+}
 }

@@ -33,25 +33,37 @@ class NotificationController extends Controller
         );
     }
 
-    public function markAsRead(Notification $notification): JsonResponse
-    {
-        $notification = $this->notificationService
-            ->markAsRead($notification);
-
+public function markAsRead(Notification $notification): JsonResponse
+{
+    if ($notification->user_id != auth()->id()) {
         return response()->json([
-            'success' => true,
-            'message' => 'Notification marked as read.',
-            'data' => new NotificationResource($notification),
-        ]);
+            'success' => false,
+            'message' => 'Unauthorized'
+        ], 403);
     }
 
-    public function destroy(Notification $notification): JsonResponse
-    {
-        $this->notificationService->delete($notification);
+    $notification = $this->notificationService->markAsRead($notification);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification deleted successfully.',
-        ]);
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Notification marked as read.',
+        'data' => new NotificationResource($notification),
+    ]);
 }
+
+public function destroy(Notification $notification): JsonResponse
+{
+    if ($notification->user_id != auth()->id()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized'
+        ], 403);
+    }
+
+    $this->notificationService->delete($notification);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Notification deleted successfully.',
+    ]);
+}}
