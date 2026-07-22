@@ -205,6 +205,7 @@ class BookingService
         ]);
     }
 
+ 
     protected function resolveAdminId(?int $adminId = null): ?int
     {
         if ($adminId !== null) {
@@ -235,5 +236,25 @@ class BookingService
             ->where('status', 'verified')
             ->exists();
     }
+
+protected function resolveAdminId(?int $adminId = null): int
+{
+    if ($adminId) {
+        return $adminId;
+    }
+
+    $admin = \App\Models\Admin::query()->first();
+
+    if ($admin) {
+        return $admin->id;
+    }
+
+    throw new RuntimeException('No admin user available for this action.');
+}
+
+
+public function __construct(
+    protected NotificationService $notificationService) {}
+ 
 }
 

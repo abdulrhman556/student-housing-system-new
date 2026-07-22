@@ -66,12 +66,31 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus']);
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
     Route::get('/bookings/{booking}/history', [BookingController::class, 'history']);
+
     // متكرارين
     // Route::patch('admin/bookings/{booking}/confirm',
     // [AdminBookingController::class,'confirmAvailability']);
     // Route::patch('admin/bookings/{booking}/reject',
     //     [AdminBookingController::class,'reject']);
     // Route::apiResource('bookings', BookingController::class);
+
+
+
+
+    // Route::patch(
+    // 'admin/bookings/{booking}/confirm',
+    // [AdminBookingController::class,'confirmAvailability']);
+    // Route::patch(
+    //     'admin/bookings/{booking}/reject',
+    //     [AdminBookingController::class,'reject']);
+
+
+    Route::patch('admin/bookings/{booking}/confirm',
+    [AdminBookingController::class,'confirmAvailability']);
+    Route::patch('admin/bookings/{booking}/reject',
+        [AdminBookingController::class,'reject']);
+    Route::apiResource('bookings', BookingController::class);
+
     // Booking
 
     // Favorites

@@ -21,9 +21,17 @@ return new class extends Migration
             $table->foreignId('admin_id')
                 ->nullable()
                 ->constrained('admins')
+ 
                 ->nullOnDelete();
             $table->enum('status', [
                 'pending',
+
+                ->cascadeOnDelete();
+            $table->enum('status', [
+                'pending',
+                'contacting_owner',
+                'contacting_student',
+ 
                 'availability_confirmed',
                 'completed',
                 'cancelled',
