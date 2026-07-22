@@ -77,7 +77,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //     [AdminBookingController::class,'reject']);
 
 
-
+    Route::patch('admin/bookings/{booking}/confirm',
+    [AdminBookingController::class,'confirmAvailability']);
+    Route::patch('admin/bookings/{booking}/reject',
+        [AdminBookingController::class,'reject']);
     Route::apiResource('bookings', BookingController::class);
     // Booking
 
