@@ -62,4 +62,30 @@ class User extends Authenticatable
     {
         return "{$this->fname} {$this->lname}";
     }
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class, 'owner_id');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'student_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'student_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'student_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
 }

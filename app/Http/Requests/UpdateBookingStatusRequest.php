@@ -26,12 +26,12 @@ class UpdateBookingStatusRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                'in:pending,contacting_owner,contacting_student,completed,cancelled',
+                'in:pending,contacting_owner,contacting_student,availability_confirmed,completed,cancelled',
             ],
             'admin_id' => [
                 'nullable',
                 'integer',
-                'exists:users,id',
+                'exists:admins,id',
             ],
             'note' => [
                 'nullable',

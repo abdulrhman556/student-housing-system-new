@@ -26,8 +26,20 @@ class Admin extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function refreshTokens()
+
+    public function bookings()
     {
-        return $this->hasMany(RefreshToken::class, 'admin_id');
+        return $this->hasMany(Booking::class, 'admin_id');
     }
+
+    public function bookingHistory()
+    {
+        return $this->hasMany(BookingHistory::class, 'admin_id');
+    }
+
+    public function verifiedPayments()
+    {
+        return $this->hasMany(Payment::class, 'verified_by');
+    }
+
 }
