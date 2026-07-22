@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+
     // Route::patch(
     // 'admin/bookings/{booking}/confirm',
     // [AdminBookingController::class,'confirmAvailability']);
@@ -77,6 +78,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //     [AdminBookingController::class,'reject']);
 
 
+
+    Route::patch('admin/bookings/{booking}/confirm',
+    [AdminBookingController::class,'confirmAvailability']);
+    Route::patch('admin/bookings/{booking}/reject',
+        [AdminBookingController::class,'reject']);
 
     Route::apiResource('bookings', BookingController::class);
     // Booking
@@ -202,3 +208,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/governorates',                    [LocationController::class, 'governorates']);
 Route::get('/governorates/{id}/cities',        [LocationController::class, 'cities']);
 Route::get('/cities/{id}/universities',        [LocationController::class, 'universities']);
+
+
+//تيست عشان احنا حمير
