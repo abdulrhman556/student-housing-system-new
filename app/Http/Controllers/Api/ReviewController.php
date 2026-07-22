@@ -11,115 +11,165 @@ use App\Models\Review;
 use App\Services\ReviewService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use RuntimeException;
 
 class ReviewController extends Controller
 {
-    public function __construct(protected ReviewService $reviewService)
-    {
+    public function __construct(
+        protected ReviewService $reviewService
+    ) {
     }
 
     /**
-     * Create a review for a completed booking.
+     * Create a review.
      */
     public function store(StoreReviewRequest $request): JsonResponse
     {
         try {
-            $studentId = Auth::id() ?? 1;
-            $review = $this->reviewService->create($request->validated(), $studentId);
+
+            $studentId = Auth::id();
+
+            if (!$studentId) {
+                throw new RuntimeException('Unauthenticated.');
+            }
+
+            $review = $this->reviewService->create(
+                $request->validated(),
+                $studentId
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Review created successfully.',
                 'data' => new ReviewResource($review),
             ], 201);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+
         }
     }
 
     /**
-     * Update a review owned by the current student.
+     * Update review.
      */
-    public function update(Review $review, UpdateReviewRequest $request): JsonResponse
+    public function update(
+        Review $review,
+        UpdateReviewRequest $request
+    ): JsonResponse
     {
         try {
-            $studentId = Auth::id() ?? 1;
-            $updatedReview = $this->reviewService->update($review, $studentId, $request->validated());
+
+            $studentId = Auth::id();
+
+            if (!$studentId) {
+                throw new RuntimeException('Unauthenticated.');
+            }
+
+            $review = $this->reviewService->update(
+                $review,
+                $studentId,
+                $request->validated()
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Review updated successfully.',
-                'data' => new ReviewResource($updatedReview),
+                'data' => new ReviewResource($review),
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+
         }
     }
 
     /**
-     * Delete a review owned by the current student.
+     * Delete review.
      */
     public function destroy(Review $review): JsonResponse
     {
         try {
-            $studentId = Auth::id() ?? 1;
-            $this->reviewService->delete($review, $studentId);
+
+            $studentId = Auth::id();
+
+            if (!$studentId) {
+                throw new RuntimeException('Unauthenticated.');
+            }
+
+            $this->reviewService->delete(
+                $review,
+                $studentId
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Review deleted successfully.',
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+
         }
     }
 
     /**
-     * List all reviews for a specific property.
+     * Property reviews.
      */
     public function index(Property $property): JsonResponse
     {
         try {
+
             $reviews = $this->reviewService->getPropertyReviews($property);
 
             return response()->json([
                 'success' => true,
                 'data' => ReviewResource::collection($reviews),
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+
         }
     }
 
     /**
-     * Show a single review.
+     * Show review.
      */
     public function show(Review $review): JsonResponse
     {
         try {
-            $reviewDetails = $this->reviewService->show($review);
+
+            $review = $this->reviewService->show($review);
 
             return response()->json([
                 'success' => true,
-                'data' => new ReviewResource($reviewDetails),
+                'data' => new ReviewResource($review),
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+
         }
     }
 }

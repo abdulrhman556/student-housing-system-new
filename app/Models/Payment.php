@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Admin;
 
 class Payment extends Model
 {
@@ -25,22 +25,7 @@ class Payment extends Model
 
     public function verifier()
     {
-        return $this->belongsTo(User::class, 'verified_by');
+        return $this->belongsTo(Admin::class, 'verified_by');
     }
-
-    // لو الأدمن عايز يشوف كل المدفوعات اللي راجعها.
-    public function verifiedPayments()
-    {
-        return $this->hasMany(Payment::class, 'verified_by');
-    }
-
-    // public function payment()
-    // {
-    //     return $this->hasOne(Payment::class);
-    // }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
+    
 }

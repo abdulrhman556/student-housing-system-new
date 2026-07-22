@@ -86,7 +86,14 @@ return DB::transaction(function () use ($booking, $data, $studentId): Review {
      */
     public function getPropertyReviews(Property $property)
     {
-        return $property->reviews()->with(['student', 'booking'])->latest()->get();
+        return $property
+            ->reviews()
+            ->with([
+                'student',
+                'booking.unit'
+            ])
+            ->latest()
+            ->paginate(15);
     }
 
     /**

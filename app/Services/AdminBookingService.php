@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\BookingHistory;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,10 @@ class AdminBookingService
     public function index(?string $status = null, ?string $search = null)
     {
         $query = Booking::query()
-            ->with(['student', 'property', 'unit'])
+            ->with([
+                'student',
+                'unit.property',
+            ])
             ->latest();
 
         if ($status) {
@@ -39,7 +43,7 @@ class AdminBookingService
                         ->orWhere(DB::raw("CONCAT(fname, ' ', lname)"), 'like', "%{$searchTerm}%")
                         ->orWhere('email', 'like', "%{$searchTerm}%");
                 })
-                    ->orWhereHas('property', function (Builder $propertyQuery) use ($searchTerm): void {
+                    ->orWhereHas('unit.property', function (Builder $propertyQuery) use ($searchTerm): void {
                         $propertyQuery->where('title', 'like', "%{$searchTerm}%");
                     });
             }
@@ -53,7 +57,10 @@ class AdminBookingService
      */
     public function show(Booking $booking): Booking
     {
-        return $booking->load(['student', 'property', 'unit']);
+        return $booking->load([
+            'student',
+            'unit.property',
+        ]);
     }
 
     /**
@@ -83,9 +90,14 @@ public function confirmAvailability(Booking $booking): Booking
             );
         }
 
+        $adminId = auth('admin')->id();
+
         $booking->update([
             'status' => 'availability_confirmed',
+            'admin_id' => $adminId,
         ]);
+
+        $this->createHistory($booking, $adminId, 'availability_confirmed', 'Booking availability confirmed by admin.');
 
         $unit->decrement('available_count');
 
@@ -103,8 +115,7 @@ public function confirmAvailability(Booking $booking): Booking
 
         return $booking->fresh([
             'student',
-            'property',
-            'unit',
+            'unit.property',
         ]);
     });
 }
@@ -121,9 +132,14 @@ public function reject(Booking $booking): Booking
     }
 
     return DB::transaction(function () use ($booking): Booking {
+        $adminId = auth('admin')->id();
+
         $booking->update([
             'status' => 'rejected',
+            'admin_id' => $adminId,
         ]);
+
+        $this->createHistory($booking, $adminId, 'rejected', 'Booking rejected by admin.');
 
         $this->sendBookingNotification(
             $booking,
@@ -139,8 +155,7 @@ public function reject(Booking $booking): Booking
 
         return $booking->fresh([
             'student',
-            'property',
-            'unit',
+            'unit.property',
         ]);
     });
 }
@@ -171,9 +186,14 @@ public function cancel(Booking $booking): Booking
             }
         }
 
+        $adminId = auth('admin')->id();
+
         $booking->update([
             'status' => 'cancelled',
+            'admin_id' => $adminId,
         ]);
+
+        $this->createHistory($booking, $adminId, 'cancelled', 'Booking cancelled by admin.');
 
         $this->sendBookingNotification(
             $booking,
@@ -189,10 +209,19 @@ public function cancel(Booking $booking): Booking
 
         return $booking->fresh([
             'student',
-            'property',
-            'unit',
+            'unit.property',
         ]);
     });
+}
+
+protected function createHistory(Booking $booking, ?int $adminId, string $status, ?string $note = null): void
+{
+    BookingHistory::query()->create([
+        'booking_id' => $booking->id,
+        'admin_id' => $adminId,
+        'status' => $status,
+        'note' => $note,
+    ]);
 }
 
 protected function sendBookingNotification(

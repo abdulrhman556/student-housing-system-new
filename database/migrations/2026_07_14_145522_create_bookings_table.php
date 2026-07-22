@@ -20,8 +20,8 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->foreignId('admin_id')
                 ->nullable()
-                ->constrained('users')
-                ->cascadeOnDelete();
+                ->constrained('admins')
+                ->nullOnDelete();
             $table->enum('status', [
                 'pending',
                 'availability_confirmed',
