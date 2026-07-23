@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Unit;
@@ -39,4 +39,9 @@ class Booking extends Model
     {
         return $this->hasOne(Review::class);
     }
+
+    public function property(): BelongsTo
+{
+    return $this->belongsTo(Property::class);
+}
 }
