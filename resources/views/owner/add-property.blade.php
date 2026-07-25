@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/owner-css/add.css">
+    <link rel="stylesheet" href="{{ asset('css/owner-css/add.css') }}">
     <title>إضافة عقار جديد - بيتي</title>
     
 <base target="_blank">
@@ -376,7 +376,8 @@
             </div>
         </div>
     </div>
-<script src="../js/owner-js/add.js"></script>
-   
+
+
+<script src="{{ asset('js/owner-js/add.js') }}"></script>
 </body>
 </html>

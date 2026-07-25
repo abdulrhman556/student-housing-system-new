@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/owner-css/support-owner.css">
+    <link rel="stylesheet" href="{{ asset('css/owner-css/support-owner.css') }}">
     <title>الدعم الفني - بيتي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
    
@@ -260,7 +260,7 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-<script src="../js/owner-js/owner-support.js"></script>
-   
+
+    <script src="{{ asset('js/owner-js/owner-support.js') }}"></script>
 </body>
 </html>

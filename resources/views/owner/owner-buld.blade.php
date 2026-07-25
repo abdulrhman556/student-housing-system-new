@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/owner-css/owner-buld.css">
+    <link rel="stylesheet" href="{{ asset('css/owner-css/owner-buld.css') }}">
     <title>عقاراتي - بيتي</title>
    
 <base target="_blank">
@@ -139,7 +139,7 @@
             </div>
         </div>
     </div>
-<script src="../js/owner-js/owner-buld.js"></script>
+<script src="{{ asset('js/owner-js/owner-buld.js') }}"></script>
 
 </body>
 </html>
