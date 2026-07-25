@@ -11,28 +11,41 @@ use App\Models\Payment;
 use App\Services\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use RuntimeException;
 
 class PaymentController extends Controller
 {
-    /**
-     * Handle payment submission, verification, rejection, and listing.
-     */
-    public function __construct(protected PaymentService $paymentService)
-    {
+    public function __construct(
+        protected PaymentService $paymentService
+    ) {
     }
 
+    /**
+     * Upload payment.
+     */
     public function store(StorePaymentRequest $request): JsonResponse
     {
         try {
-            $studentId = Auth::id() ?? 1;
-            $payment = $this->paymentService->store($request->validated(), $studentId);
+
+            $studentId = Auth::id();
+
+            if (!$studentId) {
+                throw new RuntimeException('Unauthenticated.');
+            }
+
+            $payment = $this->paymentService->store(
+                $request->validated(),
+                $studentId
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Payment uploaded successfully.',
                 'data' => new PaymentResource($payment),
             ], 201);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -40,18 +53,36 @@ class PaymentController extends Controller
         }
     }
 
-    public function verify(Payment $payment, VerifyPaymentRequest $request): JsonResponse
+    /**
+     * Verify payment.
+     */
+    public function verify(
+        Payment $payment,
+        VerifyPaymentRequest $request
+    ): JsonResponse
     {
         try {
-            $adminId = Auth::id() ?? 1;
-            $verifiedPayment = $this->paymentService->verify($payment, $adminId, $request->validated());
+
+            $adminId = Auth::id();
+
+            if (!$adminId) {
+                throw new RuntimeException('Unauthenticated.');
+            }
+
+            $payment = $this->paymentService->verify(
+                $payment,
+                $adminId,
+                $request->validated()
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Payment verified successfully.',
-                'data' => new PaymentResource($verifiedPayment),
+                'data' => new PaymentResource($payment),
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -59,18 +90,36 @@ class PaymentController extends Controller
         }
     }
 
-    public function reject(Payment $payment, VerifyPaymentRequest $request): JsonResponse
+    /**
+     * Reject payment.
+     */
+    public function reject(
+        Payment $payment,
+        VerifyPaymentRequest $request
+    ): JsonResponse
     {
         try {
-            $adminId = Auth::id() ?? 1;
-            $rejectedPayment = $this->paymentService->reject($payment, $adminId, $request->validated());
+
+            $adminId = Auth::id();
+
+            if (!$adminId) {
+                throw new RuntimeException('Unauthenticated.');
+            }
+
+            $payment = $this->paymentService->reject(
+                $payment,
+                $adminId,
+                $request->validated()
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Payment rejected successfully.',
-                'data' => new PaymentResource($rejectedPayment),
+                'data' => new PaymentResource($payment),
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -78,16 +127,22 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * List booking payments.
+     */
     public function index(Booking $booking): JsonResponse
     {
         try {
+
             $payments = $this->paymentService->index($booking);
 
             return response()->json([
                 'success' => true,
                 'data' => PaymentResource::collection($payments),
             ]);
-        } catch (\Throwable $e) {
+
+        } catch (RuntimeException $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

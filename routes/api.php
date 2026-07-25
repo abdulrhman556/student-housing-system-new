@@ -65,6 +65,49 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Favorites ──
     Route::apiResource('favorites', FavoriteController::class)
         ->only(['index', 'store', 'destroy']);
+    // Mohammed: Added routes for bookings and favorites
+
+    // Booking
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::post('/bookings', [BookingController::class, 'store']);
+    Route::get('/bookings/{booking}', [BookingController::class, 'show']);
+    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus']);
+    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+    Route::get('/bookings/{booking}/history', [BookingController::class, 'history']);
+
+    // متكرارين
+    // Route::patch('admin/bookings/{booking}/confirm',
+    // [AdminBookingController::class,'confirmAvailability']);
+    // Route::patch('admin/bookings/{booking}/reject',
+    //     [AdminBookingController::class,'reject']);
+    // Route::apiResource('bookings', BookingController::class);
+
+
+
+
+    // Route::patch(
+    // 'admin/bookings/{booking}/confirm',
+    // [AdminBookingController::class,'confirmAvailability']);
+    // Route::patch(
+    //     'admin/bookings/{booking}/reject',
+    //     [AdminBookingController::class,'reject']);
+
+
+    Route::patch('admin/bookings/{booking}/confirm',
+    [AdminBookingController::class,'confirmAvailability']);
+    Route::patch('admin/bookings/{booking}/reject',
+        [AdminBookingController::class,'reject']);
+    Route::apiResource('bookings', BookingController::class);
+
+    // Booking
+
+    // Favorites
+    Route::apiResource('favorites', FavoriteController::class)
+        ->only(['index', 'store', 'destroy']);
+    // Route::middleware('auth:sanctum')->group(function () {
+    // Route::apiResource('favorites', FavoriteController::class)
+    //     ->only(['index', 'store', 'destroy']); });
+    // Favorites
 
     // ── Notifications ──
     Route::prefix('notifications')->group(function () {
@@ -87,6 +130,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
 
     // ── Owner ──
+    // Mohammed: Added routes for bookings and favorites
+
+
+
+
+    // ==========================
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::put('/profile',                 [ProfileController::class, 'update']);
+        Route::patch('/profile/change-password', [ProfileController::class, 'changePassword']);
+    });
+
+
+
+// ==========================
+    // Owner
+    // ==========================
     Route::middleware('role:owner')->group(function () {
         Route::get('/my-properties',          [PropertyController::class, 'myProperties']);
         Route::post('/properties',            [PropertyController::class, 'store']);

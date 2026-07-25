@@ -41,7 +41,7 @@ class StoreBookingRequest extends FormRequest
             'admin_id' => [
                 'nullable',
                 'integer',
-                'exists:users,id',
+                'exists:admins,id',
             ],
             'note' => [
                 'nullable',

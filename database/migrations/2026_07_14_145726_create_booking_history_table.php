@@ -13,21 +13,26 @@ return new class extends Migration
     {
         Schema::create('booking_history', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('booking_id')
                 ->constrained()
                 ->cascadeOnDelete();
+
             $table->foreignId('admin_id')
                 ->nullable()
                 ->constrained('admins')
                 ->nullOnDelete();
-                $table->enum('status', [
+
+            $table->enum('status', [
                 'pending',
                 'availability_confirmed',
                 'completed',
                 'cancelled',
                 'rejected',
             ]);
+
             $table->text('note')->nullable();
+
             $table->timestamps();
         });
     }

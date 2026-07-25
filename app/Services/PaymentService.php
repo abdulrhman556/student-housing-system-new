@@ -4,16 +4,13 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\Payment;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use InvalidArgumentException;
 use RuntimeException;
 
 class PaymentService
 {
     /**
-     * Create a payment record and notify the admin for review.
+     * Create a payment record and send a Telegram alert for review.
      */
     public function __construct(
         protected NotificationService $notificationService,
@@ -57,21 +54,10 @@ class PaymentService
                 'status' => 'pending',
             ]);
 
-            $admins = User::where('role','admin')->get();
-            foreach ($admins as $admin) {
-                $this->notificationService->send([
-                    'user_id' => $admin->id,
-                    'type' => 'payment_uploaded',
-                    'title' => 'New payment uploaded',
-                    'body' => 'A new payment proof has been submitted for booking #' . $booking->id,
-                    'data' => ['booking_id' => $booking->id, 'payment_id' => $payment->id],
-                ]);
-
-                $this->telegramService->send([
-                    'chat_id' => config('services.telegram.chat_id'),
-                    'message' => 'New payment uploaded for booking #' . $booking->id,
-                ]);
-            }
+            $this->telegramService->send([
+                'chat_id' => config('services.telegram.chat_id'),
+                'message' => 'New payment uploaded for booking #' . $booking->id,
+            ]);
 
             return $payment->fresh(['booking']);
         });
