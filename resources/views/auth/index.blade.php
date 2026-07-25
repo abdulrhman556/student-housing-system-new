@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ asset('css/index.css') }}">
+<title>سكني</title>
+
+</head>
+<body>
+
+<div id="p1">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <canvas id="c"></canvas>
+
+  <!-- Rectangle photo -->
+  <div class="rect-wrap">
+    <div class="halo"></div>
+    <div class="halo"></div>
+    <div class="halo"></div>
+    <div class="spin-border"></div>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <div class="photo">
+      <img id="userImg" src="{{ asset('image/logo.jpeg') }}" alt=""
+        onerror="this.style.display='none';document.getElementById('ph').style.display='flex'">
+      <div class="photo-ph" id="ph">
+        <svg viewBox="0 0 64 64" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M32 4L6 26h6v34h40V26h6L32 4z" fill="rgba(212, 175, 55, 0.15)"/>
+          <path d="M24 60V42h16v18" fill="rgba(212, 175, 55, 0.1)"/>
+          <circle cx="32" cy="22" r="5" fill="rgba(212, 175, 55, 0.1)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="bar-wrap">
+    <div class="bar-track">
+      <div class="bar-fill" id="barFill"></div>
+    </div>
+  </div>
+</div>
+
+{{-- laravel no access the js --}}
+<script>
+    const splashScreenUrl = "{{ route('splashscreen') }}";
+</script>
+<script src="{{ asset('js/index.js') }}"></script>
+
+</body>
+</html>

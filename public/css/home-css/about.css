@@ -1,0 +1,29 @@
+
+        body { font-family: 'Cairo', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .btn-interact {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-interact:active {
+            transform: scale(0.96);
+        }
+        
+        /* أنيميشن فتح وإغلاق الأسئلة الشائعة */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* يتمدد تلقائياً حسب النص */
+            padding-top: 12px;
+        }
+        .faq-item .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active .chevron-icon {
+            transform: rotate(180deg);
+        }
+
