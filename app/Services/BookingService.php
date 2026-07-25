@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use RuntimeException;
 use App\Services\NotificationService;
+use App\Services\AdminAlertService;
 
 class BookingService
 {
@@ -176,18 +177,31 @@ public function show(Booking|int $booking): Booking
         ]);
     }
 
-    protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
-    {
-        $resolvedAdminId = $this->resolveAdminId($adminId);
+    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
+    // {
+    //     $resolvedAdminId = $this->resolveAdminId($adminId);
 
-        return $this->notificationService->send([
-            'user_id' => $resolvedAdminId,
-            'type' => 'booking_created',
-            'title' => 'New booking request',
-            'body' => 'A new booking request has been created.',
-            'data' => ['booking_id' => $booking->id],
-        ]);
+    //     return $this->notificationService->send([
+    //         'user_id' => $resolvedAdminId,
+    //         'type' => 'booking_created',
+    //         'title' => 'New booking request',
+    //         'body' => 'A new booking request has been created.',
+    //         'data' => ['booking_id' => $booking->id],
+    //     ]);
+    // }
+
+
+    protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
+    {
+        try {
+            app(AdminAlertService::class)
+                ->newBooking($booking);
+        } catch (\Throwable $e) {
+
+            report($e);
+        }
     }
+
 
     protected function notifyStudent(Booking $booking, string $status): Notification
     {
