@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link rel="stylesheet" href="../css/home-css/favority.css">
+    <link rel="stylesheet" href="{{ asset('css/home-css/favority.css') }}">
     <title>العقارات المفضلة | BAYATY - بيتي</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -112,7 +112,8 @@
         <p>© 2026 منصة بيتي لإسكان طلاب بني سويف. شاشة المفضلة متصلة بالكامل بالـ localStorage.</p>
     </div>
 </footer>
-<script src="../js/home-js/favourty.js"></script>
+
+<script src="{{ asset('js/home-js/favourty.js') }}"></script>
 
 
 </body>

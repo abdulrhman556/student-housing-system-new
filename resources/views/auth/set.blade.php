@@ -45,7 +45,9 @@
 
 
     <script>
-        const loginOwnerUrl = "{{ route('login-owner') }}";
+        const studentRegistrationUrl = "{{ route('student.registration') }}";
+        const ownerRegistrationUrl = "{{ route('owner.registration') }}";
+        const loginUrl = "{{ route('Login.enter') }}";
     </script>
     <script src="{{ asset('js/set.js') }}"></script>
 

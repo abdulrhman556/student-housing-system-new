@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/login-stu.css">
-    <title>تسجيل بيانات الطالب - بيتي</title>
-   
+    <link rel="stylesheet" href="{{ asset('css/login-owner.css') }}">
+
+    <title>تسجيل بيانات صاحب السكن - بيتي</title>
+
 </head>
 <body>
 
     <div class="form-container">
         <div class="form-header">
-            <h2>تسجيل بيانات <span>الطلاب</span></h2>
+            <h2>تسجيل بيانات <span>صاحب السكن</span></h2>
             <p>يرجى إدخال البيانات المطلوبة لتهيئة حسابك</p>
         </div>
 
-        <form action="./home/home.html" method="GET" id="studentForm">
+        <form action="./owner/add-property.html" method="post" id="ownerForm">
             <div class="form-grid">
-                
+
                 <div class="form-group">
                     <label for="firstName">الاسم الأول</label>
                     <input type="text" id="firstName" name="first_name" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="lastName">اسم العائلة</label>
                     <input type="text" id="lastName" name="last_name" required>
@@ -39,12 +40,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">رقم الهاتف</label>
-                    <input type="text" id="phone" name="phone" required>
+                    <label for="phone">رقم الهاتف الشخصي</label>
+                    <input type="tel" id="phone" name="phone" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="gender">الجنس (النوع)</label>
+                    <label for="whatsapp">رقم الواتساب</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">الجنس</label>
                     <select id="gender" name="gender" required>
                         <option value="" disabled selected>اختر الجنس</option>
                         <option value="male">ذكر</option>
@@ -53,19 +59,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="university">الجامعة / المعهد</label>
-                    <input type="text" id="university" name="university" required>
+                    <label for="propertyType">نوع العقار</label>
+                    <select id="propertyType" name="property_type" required>
+                        <option value="" disabled selected>اختر نوع العقار</option>
+                        <option value="apartment">شقة</option>
+                        <option value="room">غرفة</option>
+                        <option value="studio">استوديو</option>
+                        <option value="villa">فيلا</option>
+                    </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="academicYear">الفرقة الدراسية</label>
-                    <select id="academicYear" name="academic_year" required>
-                        <option value="" disabled selected>اختر الفرقة</option>
-                        <option value="1">الفرقة الأولى</option>
-                        <option value="2">الفرقة الثانية</option>
-                        <option value="3">الفرقة الثالثة</option>
-                        <option value="4">الفرقة الرابعة</option>
-                    </select>
+                <div class="form-group full-width">
+                    <label for="address">عنوان السكن بالتفصيل</label>
+                    <textarea id="address" name="address" required placeholder="المحافظة - المنطقة - الشارع - رقم العقار"></textarea>
                 </div>
 
                 <div class="form-group full-width">
@@ -81,7 +87,6 @@
             <button type="submit" class="submit-btn">إتمام التسجيل والدخول</button>
         </form>
     </div>
-
-   <script src="./js/login-stu.js"></script>
+<script src="{{ asset('js/auth/register/owner-login.js') }}"></script>
 </body>
 </html>
