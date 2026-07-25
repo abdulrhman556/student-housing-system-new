@@ -1,0 +1,38 @@
+ 
+        body { font-family: 'Cairo', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .liked {
+            font-variation-settings: 'FILL' 1 !important;
+            color: #ef4444 !important;
+        }
+        
+        /* أنيميشن الصعود الفاخر للكروت */
+        .property-card-premium {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .property-card-premium:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(7, 11, 25, 0.25);
+            border-color: #F4D068 !important;
+        }
+        
+        .img-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .img-premium-smooth {
+            filter: brightness(0.9);
+            transition: filter 0.4s ease;
+        }
+        .property-card-premium:hover .img-premium-smooth {
+            filter: brightness(1.02);
+        }
+
+        .btn-interact {
+            transition: all 0.2s ease;
+        }
+        .btn-interact:active {
+            transform: scale(0.96);
+        }

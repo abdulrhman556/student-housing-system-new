@@ -35,9 +35,10 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
     /**
-     * Reverse the migrations.
+
+
+    * Reverse the migrations.
      */
     public function down(): void
     {
