@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/mangment.css/xx.css">
+    <link rel="stylesheet" href="{{ asset('css/mangment.css/xx.css') }}">
     <title>سجل الأشخاص</title>
-   
 <base target="_blank">
 </head>
 <body>
@@ -178,7 +177,6 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-<script src="../js/mangment.js/xx.js"></script>
-   
+    <script src="{{ asset('js/mangment.js/xx.js') }}"></script>
 </body>
 </html>

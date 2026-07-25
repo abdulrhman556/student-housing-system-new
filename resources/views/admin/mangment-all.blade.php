@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المستخدمين - بيتي</title>
-    <link rel="stylesheet" href="../css/mangment.css/all.css">
+    <link rel="stylesheet" href="{{ asset('css/mangment.css/all.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
    
 </head>
@@ -144,7 +144,7 @@
     </div>
 
     <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">تمت العملية بنجاح</span></div>
-<script src="../js/mangment.js/all.js"></script>
-   
+    <script src="{{ asset('js/mangment.js/all.js') }}"></script>
 </body>
 </html>
+
