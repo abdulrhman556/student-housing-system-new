@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/owner-css/owner-profile.css">
+    <link rel="stylesheet" href="{{ asset('css/owner-css/owner-profile.css') }}">
+    <script src="{{ asset('js/owner-js/owner-buld.js') }}"></script>
     <title>الملف الشخصي - بيتي</title>
    
 <base target="_blank">
@@ -115,7 +116,7 @@
             <div class="img-modal-title" id="imgModalTitle">مستند المستخدم</div>
         </div>
     </div>
-<script src="../js/owner-js/profile-owner.js"></script>
-   
+
+    <script src="{{ asset('js/owner-js/profile-owner.js') }}"></script>
 </body>
 </html>
