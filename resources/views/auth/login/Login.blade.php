@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/regest.css">
     <title>تسجيل الدخول - بيتي</title>
-    
+
 <base target="_blank">
 </head>
 <body>
@@ -40,6 +40,6 @@
         </div>
     </div>
 
-   <script src="./js/regest.js"></script>
+    <script src="./js/regest.js"></script>
 </body>
 </html>

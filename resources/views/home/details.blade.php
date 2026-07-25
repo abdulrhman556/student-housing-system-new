@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link rel="stylesheet" href="../css/home-css/details.css">
+    <link rel="stylesheet" href="{{ asset('css/home-css/details.css') }}">
     <title>تفاصيل العقار | BAYATY - بيتي</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -237,7 +237,7 @@
         <p>© 2026 إسكان طلاب بني سويف - تفاصيل العقار متصلة بالكامل بقاعدة البيانات.</p>
     </div>
 </footer>
-<script src="../js/home-js/details.js"></script>
+<script src="{{ asset('js/home-js/details.js') }}"></script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link rel="stylesheet" href="../css/home-css/profil-stu.css">
+    <link rel="stylesheet" href="{{ asset('css/home-css/profil-stu.css') }}">
     <title>بياناتي الشخصية | BAYATY - بيتي</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -111,7 +111,8 @@
         <p id="imgModalTitle" style="text-align:center; color:white; margin-top:10px; font-weight:600;"></p>
     </div>
 </div>
-<script src="../js/home-js/profile-stu.js"></script>
+<script src="{{ asset('js/home-js/profile-stu.js') }}"></script>
+
 
 
 </body>

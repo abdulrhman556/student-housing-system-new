@@ -4,7 +4,8 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>الأسئلة الشائعة وعن بيتي | BAYATY</title>
-    <link rel="stylesheet" href="../css/home-css/about.css">
+    <link rel="stylesheet" href="{{ asset('css/home-css/about.css') }}">
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -158,8 +159,7 @@
         <p>© 2026 إسكان طلاب بني سويف - شاشة الدعم الفني والمعلومات والأسئلة الشائعة.</p>
     </div>
 </footer>
-<script src="../js/home-js/about.js"></script>
-
+<script src="{{ asset('js/home-js/about.js') }}"></script>
 
 </body>
 </html>
