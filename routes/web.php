@@ -31,5 +31,10 @@ Route::view('/owner-profile', 'owner.owner-profile')->name('owner-profile');
 Route::view('/owner-support', 'owner.owner-support')->name('owner-support');
 
 // Admin Routes 
+Route::view('/mangment-all', 'admin.mangment-all')->name('mangment-all');
+Route::view('/mangment-build', 'admin.mangment-build')->name('mangment-build');
+Route::view('/mangment-home', 'admin.mangment-home')->name('mangment-home');
+Route::view('/mangment-support', 'admin.mangment-support')->name('mangment-support');
+Route::view('/mangment-xx', 'admin.mangment-xx')->name('mangment-xx');
 
 

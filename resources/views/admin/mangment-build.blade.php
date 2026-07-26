@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/mangment.css/buld.css">
+    <link rel="stylesheet" href="{{ asset('css/mangment.css/buld.css') }}">
     <title>مراجعة العقارات - بيتي</title>
-   
 <base target="_blank">
 <base target="_blank">
 </head>
@@ -170,7 +169,6 @@
             <p id="toastText">تمت العملية بنجاح</p>
         </div>
     </div>
-<script src="../js/mangment.js/buld.js"></script>
-    
+    <script src="{{ asset('js/mangment.js/buld.js') }}"></script>
 </body>
 </html>
