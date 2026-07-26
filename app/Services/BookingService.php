@@ -12,11 +12,16 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use RuntimeException;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
 use App\Services\NotificationService;
 use App\Services\AdminAlertService;
 >>>>>>> 75900001265cd670d550899471ab658b8245a496
+=======
+use App\Services\NotificationService;
+use App\Services\AdminAlertService;
+>>>>>>> Stashed changes
 =======
 use App\Services\NotificationService;
 use App\Services\AdminAlertService;
@@ -186,6 +191,7 @@ public function show(Booking|int $booking): Booking
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<< HEAD
     /**
      * Admin notifications are intentionally disabled because notifications.user_id
@@ -230,6 +236,24 @@ public function show(Booking|int $booking): Booking
     protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
     {
 >>>>>>> Stashed changes
+=======
+    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
+    // {
+    //     $resolvedAdminId = $this->resolveAdminId($adminId);
+
+    //     return $this->notificationService->send([
+    //         'user_id' => $resolvedAdminId,
+    //         'type' => 'booking_created',
+    //         'title' => 'New booking request',
+    //         'body' => 'A new booking request has been created.',
+    //         'data' => ['booking_id' => $booking->id],
+    //     ]);
+    // }
+
+
+    protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
+    {
+>>>>>>> Stashed changes
         try {
             app(AdminAlertService::class)
                 ->newBooking($booking);
@@ -238,7 +262,10 @@ public function show(Booking|int $booking): Booking
             report($e);
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>> 75900001265cd670d550899471ab658b8245a496
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     }
