@@ -11,27 +11,19 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use RuntimeException;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
 use App\Services\NotificationService;
 use App\Services\AdminAlertService;
->>>>>>> 75900001265cd670d550899471ab658b8245a496
-=======
-use App\Services\NotificationService;
-use App\Services\AdminAlertService;
->>>>>>> Stashed changes
-=======
-use App\Services\NotificationService;
-use App\Services\AdminAlertService;
->>>>>>> Stashed changes
 
 class BookingService
 {
     public function store(array $data): Booking
     {
-        $studentId = $data['student_id'] ?? auth()->id() ?? 1;
+        $studentId = auth()->id();
+
+        if (! $studentId) {
+            throw new RuntimeException('Unauthenticated.');
+        }
+
         $unitId = $data['unit_id'] ?? null;
         $checkInDate = $data['check_in_date'] ?? null;
 
@@ -84,67 +76,34 @@ return $booking->fresh([
 
     public function index()
     {
-        return Booking::query()
-->with([
-    'student',
-    'unit.property',
-    'history'
-])
-            ->latest()
-            ->get();
+        $query = Booking::query()
+            ->with([
+                'student',
+                'unit.property',
+                'history',
+            ])
+            ->latest();
+
+        if (! auth('admin')->check()) {
+            $query->where('student_id', auth()->id());
+        }
+
+        return $query->get();
     }
 
-public function show(Booking|int $booking): Booking
-{
-    $bookingModel = $this->resolveBooking($booking);
-
-    return $bookingModel->load([
-        'student',
-        'unit.property',
-        'history'
-    ]);
-}
-
-
-
-    public function updateStatus(Booking|int $booking, string $status, array $data = []): Booking
+    public function show(Booking|int $booking): Booking
     {
         $bookingModel = $this->resolveBooking($booking);
 
-        if (! in_array($status, ['pending', 'availability_confirmed', 'completed', 'cancelled', 'rejected'], true)) {
-            throw new InvalidArgumentException('Invalid booking status.');
+        if (! auth('admin')->check() && (int) $bookingModel->student_id !== (int) auth()->id()) {
+            throw new RuntimeException('You are not authorized to view this booking.');
         }
 
-        if ($status === 'completed') {
-            $paymentVerified = Payment::query()
-                ->where('booking_id', $bookingModel->id)
-                ->where('status', 'verified')
-                ->exists();
-
-            if (! $paymentVerified) {
-                throw new RuntimeException('Booking cannot be completed until payment is verified.');
-            }
-        }
-
-        return DB::transaction(function () use ($bookingModel, $status, $data): Booking {
-            if ($bookingModel->status !== $status) {
-                $bookingModel->status = $status;
-                $bookingModel->save();
-
-                if ($status === 'cancelled' && $bookingModel->status !== 'cancelled') {
-                    $unit = Unit::query()->find($bookingModel->unit_id);
-
-                    if ($unit) {
-                        $unit->increment('available_count');
-                    }
-                }
-
-                $this->createHistory($bookingModel, $data['admin_id'] ?? null, $status, $data['note'] ?? 'Booking status updated.');
-                $this->notifyStudent($bookingModel, $status);
-            }
-
-            return $bookingModel->fresh(['student',  'unit.property', 'unit', 'history']);
-        });
+        return $bookingModel->load([
+            'student',
+            'unit.property',
+            'history',
+        ]);
     }
 
     public function history(Booking|int $booking)
@@ -164,9 +123,25 @@ public function show(Booking|int $booking): Booking
             throw new RuntimeException('You are not authorized to cancel this booking.');
         }
 
-        return $this->updateStatus($bookingModel, 'cancelled', [
-            'note' => 'Booking cancelled by student.',
-        ]);
+        if (in_array($bookingModel->status, ['completed', 'cancelled', 'rejected'], true)) {
+            throw new RuntimeException('This booking cannot be cancelled.');
+        }
+
+        return DB::transaction(function () use ($bookingModel): Booking {
+            $bookingModel->status = 'cancelled';
+            $bookingModel->save();
+
+            $unit = $bookingModel->unit()->lockForUpdate()->first();
+
+            if ($unit) {
+                $unit->increment('available_count');
+            }
+
+            $this->createHistory($bookingModel, null, 'cancelled', 'Booking cancelled by student.');
+            $this->notifyStudent($bookingModel, 'cancelled');
+
+            return $bookingModel->fresh(['student', 'unit.property', 'unit', 'history']);
+        });
     }
 
     protected function resolveBooking(Booking|int $booking): Booking
@@ -190,18 +165,43 @@ public function show(Booking|int $booking): Booking
         ]);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< HEAD
     /**
      * Admin notifications are intentionally disabled because notifications.user_id
      * points to the users table while admins live in a separate admins table.
      * TODO: move this to the admin notification channel once supported by the architecture.
-     */
-    protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
-    {
-        unset($booking, $adminId);
-=======
+    //  */
+    //  */
+    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
+    // {
+    //     unset($booking, $adminId);
+    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
+    // {
+    //     $resolvedAdminId = $this->resolveAdminId($adminId);
+
+    //     return $this->notificationService->send([
+    //         'user_id' => $resolvedAdminId,
+    //         'type' => 'booking_created',
+    //         'title' => 'New booking request',
+    //         'body' => 'A new booking request has been created.',
+    //         'data' => ['booking_id' => $booking->id],
+    //     ]);
+    // }
+
+
+    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
+    // {
+    //     $resolvedAdminId = $this->resolveAdminId($adminId);
+
+    //     return $this->notificationService->send([
+    //         'user_id' => $resolvedAdminId,
+    //         'type' => 'booking_created',
+    //         'title' => 'New booking request',
+    //         'body' => 'A new booking request has been created.',
+    //         'data' => ['booking_id' => $booking->id],
+    //     ]);
+    // }
+
+
     // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
     // {
     //     $resolvedAdminId = $this->resolveAdminId($adminId);
@@ -218,42 +218,6 @@ public function show(Booking|int $booking): Booking
 
     protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
     {
-=======
-    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
-    // {
-    //     $resolvedAdminId = $this->resolveAdminId($adminId);
-
-    //     return $this->notificationService->send([
-    //         'user_id' => $resolvedAdminId,
-    //         'type' => 'booking_created',
-    //         'title' => 'New booking request',
-    //         'body' => 'A new booking request has been created.',
-    //         'data' => ['booking_id' => $booking->id],
-    //     ]);
-    // }
-
-
-    protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
-    {
->>>>>>> Stashed changes
-=======
-    // protected function notifyAdmin(Booking $booking, ?int $adminId = null): Notification
-    // {
-    //     $resolvedAdminId = $this->resolveAdminId($adminId);
-
-    //     return $this->notificationService->send([
-    //         'user_id' => $resolvedAdminId,
-    //         'type' => 'booking_created',
-    //         'title' => 'New booking request',
-    //         'body' => 'A new booking request has been created.',
-    //         'data' => ['booking_id' => $booking->id],
-    //     ]);
-    // }
-
-
-    protected function notifyAdmin(Booking $booking, ?int $adminId = null): void
-    {
->>>>>>> Stashed changes
         try {
             app(AdminAlertService::class)
                 ->newBooking($booking);
@@ -261,13 +225,6 @@ public function show(Booking|int $booking): Booking
 
             report($e);
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> 75900001265cd670d550899471ab658b8245a496
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
 
@@ -282,19 +239,13 @@ public function show(Booking|int $booking): Booking
         ]);
     }
 
-protected function resolveAdminId(?int $adminId = null): int
+protected function resolveAdminId(?int $adminId = null): ?int
 {
     if ($adminId) {
         return $adminId;
     }
 
-    $admin = \App\Models\Admin::query()->first();
-
-    if ($admin) {
-        return $admin->id;
-    }
-
-    throw new RuntimeException('No admin user available for this action.');
+    return null;
 }
 
 

@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class AdminUserController extends Controller
+{
+    /**
+     * عرض كل حسابات الـ Owners في انتظار موافقة الأدمن
+     */
+    public function pendingOwners(Request $request): JsonResponse
+    {
+        $owners = User::where('role', 'owner')
+            ->where('status', 'pending')
+            ->latest()
+            ->paginate($request->per_page ?? 15);
+
+        return response()->json([
+            'success' => true,
+            'data' => $owners,
+        ]);
+    }
+
+    /**
+     * تفعيل حساب Owner عشان يقدر يسجل دخول ويضيف عقارات
+     */
+    public function approveOwner($id): JsonResponse
+    {
+        $user = User::where('role', 'owner')->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'الحساب غير موجود',
+            ], 404);
+        }
+
+        if ($user->status === 'active') {
+            return response()->json([
+                'success' => true,
+                'message' => 'الحساب مفعل بالفعل',
+            ]);
+        }
+
+        $user->update(['status' => 'active']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم تفعيل حساب صاحب السكن بنجاح',
+            'data' => $user->fresh(),
+        ]);
+    }
+
+    /**
+     * رفض/حظر حساب Owner (مع سبب اختياري)
+     */
+    public function blockOwner(Request $request, $id): JsonResponse
+    {
+        $user = User::where('role', 'owner')->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'الحساب غير موجود',
+            ], 404);
+        }
+
+        $user->update(['status' => 'blocked']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم حظر الحساب',
+            'data' => $user->fresh(),
+        ]);
+    }
+}

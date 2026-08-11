@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\QueryException;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class PropertyController extends Controller
@@ -298,8 +299,6 @@ class PropertyController extends Controller
             ])
 
         ]);
-
-        $property->refresh();
     }
 
 
@@ -325,7 +324,15 @@ public function destroy($id)
                     }
 
         $property->images()->delete();
-        $property->delete();
+
+        try {
+            $property->delete();
+        } catch (QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'لا يمكن حذف العقار لأن له وحدات أو حجوزات مرتبطة به. احذف الوحدات المرتبطة أولاً أو تواصل مع الدعم.',
+            ], 409);
+        }
 
 
         return response()->json([

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('property_id')
                 ->constrained()
-                ->cascadeOnDelete();
+                ->restrictOnDelete();
             $table->enum('unit_type', ['apartment', 'room', 'bed']);
             $table->string('title', 150);
             $table->decimal('price', 10, 2);
@@ -24,7 +24,10 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female']);
             $table->enum('status', ['available', 'reserved', 'occupied'])
                 ->default('available');
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['property_id', 'status']);
         });
     }
 

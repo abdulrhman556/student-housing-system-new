@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('bookings', function (Blueprint $table) {
             $table->dropForeign(['admin_id']);
-            $table->foreign('admin_id')->references('id')->on('admins')->cascadeOnDelete();
+            $table->foreign('admin_id')->references('id')->on('admins')->nullOnDelete();
         });
 
         Schema::table('booking_history', function (Blueprint $table) {
@@ -34,17 +34,17 @@ return new class extends Migration
     {
         Schema::table('bookings', function (Blueprint $table) {
             $table->dropForeign(['admin_id']);
-            $table->foreign('admin_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('admin_id')->references('id')->on('admins')->nullOnDelete();
         });
 
         Schema::table('booking_history', function (Blueprint $table) {
             $table->dropForeign(['admin_id']);
-            $table->foreign('admin_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('admin_id')->references('id')->on('admins')->nullOnDelete();
         });
 
         Schema::table('payments', function (Blueprint $table) {
             $table->dropForeign(['verified_by']);
-            $table->foreign('verified_by')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('verified_by')->references('id')->on('admins')->nullOnDelete();
         });
     }
 };

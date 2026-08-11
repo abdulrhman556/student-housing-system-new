@@ -23,14 +23,18 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('title', 255);
             $table->text('description');
-            $table->string('address',255);
+            $table->string('address', 255);
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('rejection_reason')->nullable();
             $table->integer('view_count')->default(0);
             $table->boolean('is_featured')->default(false);
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['city_id', 'status']);
+            $table->index(['university_id', 'status']);
         });
     }
 
