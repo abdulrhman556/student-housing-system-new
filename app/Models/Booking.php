@@ -3,6 +3,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Unit;
@@ -12,6 +13,8 @@ use App\Models\BookingHistory;
 
 class Booking extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'student_id',
         'unit_id',

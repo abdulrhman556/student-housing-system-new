@@ -17,21 +17,15 @@ return new class extends Migration
                 ->constrained('users');
             $table->foreignId('unit_id')
                 ->constrained()
-                ->cascadeOnDelete();
+                ->restrictOnDelete();
             $table->foreignId('admin_id')
                 ->nullable()
                 ->constrained('admins')
- 
                 ->nullOnDelete();
-            $table->enum('status', [
-                'pending',
-
-                ->cascadeOnDelete();
             $table->enum('status', [
                 'pending',
                 'contacting_owner',
                 'contacting_student',
- 
                 'availability_confirmed',
                 'completed',
                 'cancelled',
@@ -39,13 +33,15 @@ return new class extends Migration
             ])->default('pending');
             $table->date('booking_date');
             $table->date('check_in_date');
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->index('status');
         });
     }
+
     /**
-
-
-    * Reverse the migrations.
+     * Reverse the migrations.
      */
     public function down(): void
     {

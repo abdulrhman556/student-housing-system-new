@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentSettingController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\AdminUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,7 @@ use App\Http\Controllers\Api\ReviewController;
 Route::post('/auth/register',    [AuthController::class, 'register']);
 Route::post('/auth/login',       [AuthController::class, 'login']);
 Route::post('/auth/admin-login', [AuthController::class, 'adminLogin']);
+Route::get('/auth/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
 Route::get('/properties',        [PropertyController::class, 'index']);
 Route::get('/properties/{id}',   [PropertyController::class, 'show']);
@@ -50,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Auth ──
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me',      [AuthController::class, 'me']);
+    Route::post('/auth/email/resend', [AuthController::class, 'resendVerification']);
 
     // ── Profile ──
     Route::put('/profile',                   [ProfileController::class, 'update']);
@@ -71,35 +75,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings/{booking}', [BookingController::class, 'show']);
-    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus']);
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
     Route::get('/bookings/{booking}/history', [BookingController::class, 'history']);
-
-    // متكرارين
-    // Route::patch('admin/bookings/{booking}/confirm',
-    // [AdminBookingController::class,'confirmAvailability']);
-    // Route::patch('admin/bookings/{booking}/reject',
-    //     [AdminBookingController::class,'reject']);
-    // Route::apiResource('bookings', BookingController::class);
-
-
-
-
-    // Route::patch(
-    // 'admin/bookings/{booking}/confirm',
-    // [AdminBookingController::class,'confirmAvailability']);
-    // Route::patch(
-    //     'admin/bookings/{booking}/reject',
-    //     [AdminBookingController::class,'reject']);
-
-
-    Route::patch('admin/bookings/{booking}/confirm',
-    [AdminBookingController::class,'confirmAvailability']);
-    Route::patch('admin/bookings/{booking}/reject',
-        [AdminBookingController::class,'reject']);
-    Route::apiResource('bookings', BookingController::class);
-
-    // Booking
 
     // Favorites
     Route::apiResource('favorites', FavoriteController::class)
@@ -121,8 +98,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/payment-settings',                    [PaymentSettingController::class, 'index']);
     Route::post('/payments',                           [PaymentController::class, 'store']);
     Route::get('/bookings/{booking}/payments',         [PaymentController::class, 'index']);
-    Route::patch('/payments/{payment}/verify',         [PaymentController::class, 'verify']);
-    Route::patch('/payments/{payment}/reject',         [PaymentController::class, 'reject']);
 
     // ── Reviews ──
     Route::post('/reviews',            [ReviewController::class, 'store']);
@@ -163,7 +138,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── Admin ──
     Route::middleware('role:admin')->group(function () {
+
+    Route::get('/admin/owners/pending',        [AdminUserController::class, 'pendingOwners']);
+    Route::patch('/admin/owners/{id}/approve', [AdminUserController::class, 'approveOwner']);
+    Route::patch('/admin/owners/{id}/block',   [AdminUserController::class, 'blockOwner']);
+
         Route::get('/admin/dashboard',                          [AdminDashboardController::class, 'index']);
+
+        Route::patch('/payments/{payment}/verify',         [PaymentController::class, 'verify']);
+        Route::patch('/payments/{payment}/reject',         [PaymentController::class, 'reject']);
 
         Route::patch('/admin/properties/{id}/approve',         [PropertyController::class, 'approve']);
         Route::patch('/admin/properties/{id}/reject',          [PropertyController::class, 'reject']);

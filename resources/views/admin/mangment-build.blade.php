@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <link rel="stylesheet" href="../css/mangment.css/buld.css">
     <title>مراجعة العقارات - بيتي</title>
    
+=======
+    <link rel="stylesheet" href="{{ asset('css/mangment.css/buld.css') }}">
+    <title>مراجعة العقارات - بيتي</title>
+>>>>>>> new-origin/abdulrhman
 <base target="_blank">
 <base target="_blank">
 </head>
@@ -170,7 +175,13 @@
             <p id="toastText">تمت العملية بنجاح</p>
         </div>
     </div>
+<<<<<<< HEAD
 <script src="../js/mangment.js/buld.js"></script>
     
 </body>
 </html>
+=======
+    <script src="{{ asset('js/mangment.js/buld.js') }}"></script>
+</body>
+</html>
+>>>>>>> new-origin/abdulrhman

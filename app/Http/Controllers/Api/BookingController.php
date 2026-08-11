@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookingRequest;
-use App\Http\Requests\UpdateBookingStatusRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Services\BookingService;
@@ -57,38 +56,6 @@ class BookingController extends Controller
         return new BookingResource(
             $this->bookingService->show($booking)
         );
-    }
-
-    /**
-     * Update booking status.
-     */
-    public function updateStatus(
-        UpdateBookingStatusRequest $request,
-        Booking $booking
-    ): JsonResponse {
-
-        try {
-
-            $booking = $this->bookingService->updateStatus(
-                $booking,
-                $request->validated()['status'],
-                $request->validated()
-            );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Booking status updated successfully.',
-                'data' => new BookingResource($booking),
-            ]);
-
-        } catch (\Throwable $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400);
-
-        }
     }
 
     /**

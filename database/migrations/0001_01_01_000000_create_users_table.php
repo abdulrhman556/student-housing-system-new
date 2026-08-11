@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('phone');
+            $table->string('phone')->unique();
             $table->enum('gender', ['male', 'female']);
             $table->string('profile_image')->nullable();
-            $table->enum('role', ['student', 'owner'])->default('student');
-            $table->enum('status', ['pending', 'active', 'blocked'])->default('active');
+            $table->enum('role', ['student', 'owner'])->default('student')->index();
+            $table->enum('status', ['pending', 'active', 'blocked'])->default('active')->index();
             $table->string('national_id')->nullable();
             $table->string('national_id_image')->nullable();
             $table->rememberToken();

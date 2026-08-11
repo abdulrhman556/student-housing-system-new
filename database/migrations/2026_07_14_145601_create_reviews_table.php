@@ -22,7 +22,7 @@ return new class extends Migration
         $table->foreignId('property_id')
             ->constrained()
             ->cascadeOnDelete();
-        $table->tinyInteger('rating');
+        $table->unsignedTinyInteger('rating');
         $table->text('comment')->nullable();
         $table->timestamps();
         $table->unique('booking_id');

@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <link rel="stylesheet" href="../css/mangment.css/home.css">
+=======
+    <link rel="stylesheet" href="{{ asset('css/mangment.css/home.css') }}">
+>>>>>>> new-origin/abdulrhman
     <title>لوحة التحكم - بيتي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -223,7 +227,12 @@
             بيتي BAYATY — لوحة تحكم الإدارة © 2026
         </div>
     </main>
+<<<<<<< HEAD
 <script src="../js/mangment.js/home.js"></script>
   
+=======
+    <script src="{{ asset('js/mangment.js/home.js') }}"></script>
+
+>>>>>>> new-origin/abdulrhman
 </body>
 </html>

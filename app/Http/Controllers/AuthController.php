@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Admin;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -44,9 +45,11 @@ class AuthController extends Controller
 
         'university_id'     => $request->role === 'student' ? $request->university_id : null,
 ]);
+        $user->sendEmailVerificationNotification();
+
         return response()->json([
             'success' => true,
-            'message' => 'تم التسجيل بنجاح',
+            'message' => 'تم التسجيل بنجاح. يرجى التحقق من البريد الإلكتروني',
             'user'    => $user,
         ], 201);
     }
@@ -72,6 +75,13 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'الحساب مش مفعل',
+            ], 403);
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'يرجى تفعيل البريد الإلكتروني أولاً',
             ], 403);
         }
 
@@ -126,6 +136,53 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'تم تسجيل الخروج',
+        ]);
+    }
+
+    // ── VERIFY EMAIL ──
+    public function verifyEmail(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رابط التحقق غير صالح',
+            ], 400);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'البريد الإلكتروني مفعل بالفعل',
+            ]);
+        }
+
+        $user->markEmailAsVerified();
+        event(new Verified($user));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم التحقق من البريد الإلكتروني بنجاح',
+        ]);
+    }
+
+    public function resendVerification(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'البريد الإلكتروني مفعل بالفعل',
+            ]);
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم إرسال رابط التحقق مرة أخرى',
         ]);
     }
 

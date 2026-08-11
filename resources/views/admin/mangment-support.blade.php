@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <link rel="stylesheet" href="../css/mangment.css/support.css">
+=======
+    <link rel="stylesheet" href="{{ asset('css/mangment.css/support.css') }}">
+>>>>>>> new-origin/abdulrhman
     <title>إدارة الدعم الفني - بيتي</title>
    
 <base target="_blank">
@@ -208,8 +212,12 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
+<<<<<<< HEAD
 
     <script src="../js/mangment.js/support.js"></script>
       
+=======
+    <script src="{{ asset('js/mangment.js/support.js') }}"></script>
+>>>>>>> new-origin/abdulrhman
 </body>
 </html>

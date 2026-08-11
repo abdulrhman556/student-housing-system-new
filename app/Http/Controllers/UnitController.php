@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class UnitController extends Controller
 {
@@ -137,7 +138,14 @@ class UnitController extends Controller
             ], 404);
         }
 
-        $unit->delete();
+        try {
+            $unit->delete();
+        } catch (QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'لا يمكن حذف الوحدة لأن لها حجوزات مرتبطة بها.',
+            ], 409);
+        }
 
         return response()->json([
             'success' => true,

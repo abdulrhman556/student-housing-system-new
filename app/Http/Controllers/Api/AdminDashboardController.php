@@ -26,5 +26,8 @@ class AdminDashboardController extends Controller
                 'message' => 'Unable to load dashboard statistics.',
             ], 500);
         }
+
+
+
     }
 }
