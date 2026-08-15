@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/owner-css/support-owner.css">
-=======
-    <link rel="stylesheet" href="{{ asset('css/owner-css/support-owner.css') }}">
->>>>>>> new-origin/abdulrhman
     <title>الدعم الفني - بيتي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-   
+
 <base target="_blank">
 </head>
 <body>
@@ -264,12 +260,7 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-<<<<<<< HEAD
 <script src="../js/owner-js/owner-support.js"></script>
-   
-=======
 
-    <script src="{{ asset('js/owner-js/owner-support.js') }}"></script>
->>>>>>> new-origin/abdulrhman
 </body>
 </html>

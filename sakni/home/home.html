@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BAYATY - بيتي | الرئيسية</title>
+    <link rel="stylesheet" href="../css/home-css/home.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+   
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "navy-dark": "#070B19",
+                        "navy-light": "#0D162F",
+                        "navy-gradient-start": "#070B19",
+                        "navy-gradient-end": "#1E293B",
+                        "gold-bright": "#F4D068",
+                        "gold-dark": "#AA7C11",
+                    }
+                },
+            },
+        }
+    </script>
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+</head>
+<body class="bg-white text-slate-800 min-h-screen flex flex-col justify-between pb-16 md:pb-0">
+
+<!-- TopNavBar -->
+<header class="bg-gradient-to-r from-[#070B19] to-[#1E293B] border-b border-[#AA7C11]/30 sticky top-0 z-50 w-full h-16 flex items-center px-4 md:px-12 shadow-md">
+    <div class="flex justify-between items-center w-full max-w-7xl mx-auto">
+        <div class="flex items-center gap-8">
+            <span class="text-2xl font-black tracking-wider text-[#F4D068]">BAYATY <span class="text-white text-sm font-normal">بيتي</span></span>
+            <nav class="hidden md:flex gap-6">
+                <a class="text-sm font-semibold text-[#F4D068] border-b-2 border-[#F4D068] pb-1" href="home.html">الرئيسية</a>
+                <a class="text-sm font-semibold text-slate-300 hover:text-[#F4D068] transition-colors" href="favorites.html">المفضلة ❤️</a>
+                <a class="text-sm font-semibold text-slate-300 hover:text-[#F4D068] transition-colors" href="about.html">معلومات عن</a>
+
+            </nav>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input class="bg-white/10 border border-[#AA7C11]/40 rounded-full pr-10 pl-4 py-1.5 text-sm focus:ring-2 focus:ring-[#F4D068] focus:border-transparent text-white placeholder-slate-300 w-64 text-right" placeholder="ابحث في مناطق بني سويف..." type="text" id="searchInput" oninput="applyFilters()"/>
+            </div>
+
+            <button class="text-slate-300 hover:bg-white/10 p-2 rounded-full transition-colors relative" id="notificationBtn" onclick="showNoNotificationsAlert()">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+
+            <a href="profile-student.html" class="w-9 h-9 rounded-full overflow-hidden border-2 border-[#F4D068] hover:scale-105 transition-transform" id="userAvatarBtn">
+                <img class="w-full h-full object-cover" id="userAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" alt="User Profile"/>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Smart Area Scroller -->
+<div class="bg-white border-b border-slate-100 py-4 px-4 md:px-12 sticky top-16 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center gap-3 overflow-x-auto whitespace-nowrap no-scrollbar py-1" id="smartBar">
+        <button class="bg-gradient-to-r from-[#070B19] to-[#1E293B] text-[#F4D068] font-bold px-4 py-1.5 rounded-full text-xs shadow-sm filter-tag" onclick="filterByArea('all', this)">كل مناطق بني سويف</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('عبد السلام عارف', this)">ش عبد السلام عارف</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('شرق النيل', this)">حي شرق النيل</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('مقبل', this)">حي مقبل</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('أرض الحرية', this)">أرض الحرية</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('خلف الاستاد', this)">منطقة خلف الاستاد</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('الجزيرة', this)">حي الجزيرة</button>
+        <button class="bg-slate-50 text-slate-700 hover:bg-slate-100 px-4 py-1.5 rounded-full text-xs border border-slate-200/80 transition-all filter-tag" onclick="filterByArea('كورنيش النيل', this)">كورنيش النيل</button>
+    </div>
+</div>
+
+<!-- Floating Filter Button for Mobile Screens -->
+<div class="lg:hidden fixed bottom-6 left-4 z-50">
+    <button onclick="toggleMobileFilter(true)" class="bg-gradient-to-r from-[#070B19] to-[#1E293B] text-[#F4D068] font-bold px-5 py-3 rounded-full shadow-2xl flex items-center gap-2 text-sm border border-[#AA7C11]/40">
+        <span class="material-symbols-outlined text-xl">tune</span>
+        <span>تصفية النتائج</span>
+    </button>
+</div>
+
+<!-- Main Housing Layout Content -->
+<main class="max-w-7xl mx-auto px-4 md:px-12 flex flex-col lg:flex-row gap-10 py-8 flex-grow bg-white w-full">
+
+    <!-- Sidebar Filters -->
+    <aside class="hidden lg:block w-72 flex-shrink-0 z-10">
+        <div id="desktopFilterWrapper" class="bg-gradient-to-b from-[#070B19] to-[#1E293B] p-6 rounded-2xl border border-[#AA7C11]/30 sticky top-44 shadow-xl">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#F4D068]">tune</span> تصنيف الفلاتر
+                </h2>
+                <button onclick="resetFilters()" class="text-[#F4D068] text-xs hover:underline">إعادة ضبط</button>
+            </div>
+
+            <div class="mb-6 border-b border-slate-700/50 pb-4">
+                <h3 class="text-xs font-semibold mb-3 text-slate-300">نطاق السعر (جنيه مصري)</h3>
+                <div class="flex items-center gap-2">
+                    <input id="minPrice" oninput="applyFilters()" class="w-full bg-[#1A264E]/60 border border-[#AA7C11]/40 rounded-lg p-2 text-sm text-white text-center focus:ring-1 focus:ring-[#F4D068]" placeholder="الأقل" type="number"/>
+                    <span class="text-slate-500">-</span>
+                    <input id="maxPrice" oninput="applyFilters()" class="w-full bg-[#1A264E]/60 border border-[#AA7C11]/40 rounded-lg p-2 text-sm text-white text-center focus:ring-1 focus:ring-[#F4D068]" placeholder="الأعلى" type="number"/>
+                </div>
+            </div>
+
+            <div class="mb-6 border-b border-slate-700/50 pb-4">
+                <h3 class="text-xs font-semibold mb-3 text-slate-300">الخدمات والمميزات</h3>
+                <div class="space-y-2.5" id="servicesCheckboxes">
+                    <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-300 hover:text-white">
+                        <input onchange="applyFilters()" class="rounded text-[#AA7C11] focus:ring-[#F4D068] bg-[#1A264E] border-[#AA7C11]/40" type="checkbox" value="wifi"/>
+                        <span>إنترنت سريع WiFi</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-300 hover:text-white">
+                        <input onchange="applyFilters()" class="rounded text-[#AA7C11] focus:ring-[#F4D068] bg-[#1A264E] border-[#AA7C11]/40" type="checkbox" value="ac"/>
+                        <span>تكييف هواء</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-300 hover:text-white">
+                        <input onchange="applyFilters()" class="rounded text-[#AA7C11] focus:ring-[#F4D068] bg-[#1A264E] border-[#AA7C11]/40" type="checkbox" value="kitchen"/>
+                        <span>مطبخ متكامل</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xs font-semibold mb-2 text-slate-300">أقصى مسافة متوقعة (كم)</h3>
+                <input id="distanceRange" class="w-full accent-[#F4D068] bg-[#1A264E]" max="50" min="0" step="1" type="range" value="50" oninput="updateDistanceText(this.value)"/>
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>0 كم</span>
+                    <span id="distValue" class="text-[#F4D068] font-bold">50 كم</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Filter Slide Drawer -->
+    <div id="mobileFilterModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-end">
+        <div class="bg-gradient-to-b from-[#070B19] to-[#1E293B] w-80 h-full p-6 flex flex-col justify-between border-r border-[#AA7C11]/40 animate-slide-in text-white">
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-[#F4D068]">tune</span> تصفية العقارات</h2>
+                    <button onclick="toggleMobileFilter(false)" class="text-slate-400 p-1"><span class="material-symbols-outlined">close</span></button>
+                </div>
+                <div id="mobileFilterPlaceholder"></div>
+            </div>
+            <button onclick="toggleMobileFilter(false)" class="w-full bg-[#0D162F] text-[#F4D068] font-bold py-3 rounded-lg text-sm shadow-md mt-4 border border-[#AA7C11]/40">إغلاق وتطبيق</button>
+        </div>
+    </div>
+
+    <!-- Properties Presentation Grid -->
+    <section class="flex-grow w-full">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 pb-2 border-b border-slate-100">
+            <div>
+                <h1 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    نتائج السكن المتاحة
+                    <span id="genderBadge" class="text-xs bg-gradient-to-r from-[#070B19] to-[#1E293B] text-[#F4D068] border border-[#AA7C11]/40 px-2.5 py-0.5 rounded-full font-semibold shadow-sm">جاري المزامنة...</span>
+                </h1>
+                <p id="resultsCount" class="text-slate-500 text-xs mt-1">يتم الآن فحص قاعدة بيانات بيتي الحقيقية...</p>
+            </div>
+            <div class="flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200 text-xs self-stretch sm:self-auto justify-center shadow-sm">
+                <button id="filterAll" onclick="filterByGender('all')" class="px-3 py-1.5 rounded-lg font-bold bg-gradient-to-r from-[#070B19] to-[#1E293B] text-[#F4D068] shadow-md">الكل</button>
+                <button id="filterMale" onclick="filterByGender('male')" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-colors">سكن شباب</button>
+                <button id="filterFemale" onclick="filterByGender('female')" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-colors">سكن بنات</button>
+            </div>
+        </div>
+
+        <!-- Property Cards Grid -->
+        <div id="propertyGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-6"></div>
+
+        <!-- Pagination -->
+        <div class="mt-12 flex justify-center items-center gap-2">
+            <button onclick="changePage('prev')" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-50 text-slate-500 shadow-sm">
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+            <div class="flex gap-1.5" id="paginationNumbers">
+                <button onclick="changePage(1)" class="page-btn w-9 h-9 rounded-full bg-gradient-to-r from-[#070B19] to-[#1E293B] text-[#F4D068] font-bold text-sm shadow-md">1</button>
+                <button onclick="changePage(2)" class="page-btn w-9 h-9 rounded-full bg-slate-50 text-slate-500 border border-slate-200 font-bold text-sm shadow-sm">2</button>
+                <button onclick="changePage(3)" class="page-btn w-9 h-9 rounded-full bg-slate-50 text-slate-500 border border-slate-200 font-bold text-sm shadow-sm">3</button>
+            </div>
+            <button onclick="changePage('next')" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-50 text-slate-500 shadow-sm">
+                <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+        </div>
+    </section>
+</main>
+
+<!-- Floating Chat Widget -->
+<div class="chat-widget">
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">
+            <h4>💬 الدعم المباشر</h4>
+            <button class="chat-close" onclick="toggleChat()">×</button>
+        </div>
+        <div class="chat-contacts" id="chatContacts">
+            <h5>📞 أرقام التواصل السريع</h5>
+            <div id="contactsList">جاري التحميل...</div>
+        </div>
+       
+        <div class="chat-input-area">
+
+            <button class="chat-send" onclick="sendChatMessage()">
+             
+                
+            </button>
+        </div>
+    </div>
+    <button class="chat-toggle" id="chatToggle" onclick="toggleChat()">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span class="chat-badge" id="chatBadge" style="display: none;">1</span>
+    </button>
+</div>
+
+
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-40 bg-gradient-to-r from-[#070B19] to-[#1E293B] border-t border-[#AA7C11]/30 flex justify-around items-center py-2 rounded-t-xl shadow-2xl">
+    <a href="home.html" class="flex flex-col items-center justify-center text-[#F4D068] p-1">
+        <span class="material-symbols-outlined">apartment</span>
+        <span class="text-[10px] font-bold mt-0.5">الرئيسية</span>
+    </a>
+    <a href="favorites.html" class="flex flex-col items-center justify-center text-slate-300 hover:text-[#F4D068] p-1">
+        <span class="material-symbols-outlined">favorite</span>
+        <span class="text-[10px] font-medium mt-0.5">المفضلة</span>
+    </a>
+    <a href="#" onclick="showSupportPhone(event)" class="flex flex-col items-center justify-center text-slate-300 hover:text-[#F4D068] p-1">
+        <span class="material-symbols-outlined">support_agent</span>
+        <span class="text-[10px] font-medium mt-0.5">الدعم</span>
+    </a>
+    <a href="profile.html" class="flex flex-col items-center justify-center text-slate-300 hover:text-[#F4D068] p-1">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-[10px] font-medium mt-0.5">بياناتي</span>
+    </a>
+</nav>
+
+<!-- Footer -->
+<footer class="bg-gradient-to-r from-[#070B19] to-[#1E293B] border-t border-[#AA7C11]/30 py-6 mb-16 md:mb-0">
+    <div class="max-w-7xl mx-auto px-4 md:px-12 text-center text-xs text-slate-300">
+        <span class="text-lg font-black text-[#F4D068] tracking-wider block mb-1">BAYATY</span>
+        <p>© 2026 إسكان طلاب بني سويف - المساحة وهيكلية العرض مطورة بالكامل لخدمة شاشات التصنيف والتحكم.</p>
+    </div>
+</footer>
+<script src="../js/home-js/home.js"></script>
+
+
+</body>
+</html>

@@ -3,14 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/mangment.css/support.css">
-=======
     <link rel="stylesheet" href="{{ asset('css/mangment.css/support.css') }}">
->>>>>>> new-origin/abdulrhman
-    <title>إدارة الدعم الفني - بيتي</title>
-   
-<base target="_blank">
+    <title>طلبات الحجز - بيتي</title>
+    <style>
+        .booking-card { background: linear-gradient(135deg, #070B19 0%, #1E293B 100%); border: 1px solid rgba(170,124,17,0.3); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+        .booking-header { display: flex; gap: 16px; margin-bottom: 20px; border-bottom: 1px solid rgba(170,124,17,0.2); padding-bottom: 16px; }
+        .booking-img { width: 140px; height: 100px; object-fit: cover; border-radius: 12px; border: 2px solid rgba(170,124,17,0.4); flex-shrink: 0; }
+        .booking-title h3 { color: #F4D068; font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
+        .booking-title p { color: #94A3B8; font-size: 0.9rem; margin-bottom: 4px; }
+        .status-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-top: 6px; }
+        .status-pending { background: rgba(217,119,6,0.2); color: #F4D068; border: 1px solid rgba(244,208,104,0.3); }
+        .status-approved { background: rgba(22,163,74,0.2); color: #4ADE80; border: 1px solid rgba(74,222,128,0.3); }
+        .status-rejected { background: rgba(220,38,38,0.2); color: #F87171; border: 1px solid rgba(248,113,113,0.3); }
+
+        .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .detail-item { background: rgba(13,22,47,0.6); border: 1px solid rgba(170,124,17,0.2); border-radius: 10px; padding: 12px; }
+        .detail-item label { color: #94A3B8; font-size: 0.75rem; display: block; margin-bottom: 4px; }
+        .detail-item span { color: #F4D068; font-weight: 700; font-size: 0.95rem; }
+
+        .amenities-box { margin: 12px 0; }
+        .amenities-box h4 { color: #F4D068; font-size: 0.9rem; margin-bottom: 8px; }
+        .amenity-tag { display: inline-block; background: rgba(244,208,104,0.15); color: #F4D068; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(244,208,104,0.3); margin: 2px; }
+
+        .description-box { background: rgba(13,22,47,0.6); border: 1px solid rgba(170,124,17,0.2); border-radius: 10px; padding: 14px; margin: 12px 0; }
+        .description-box h4 { color: #F4D068; font-size: 0.9rem; margin-bottom: 6px; }
+        .description-box p { color: #CBD5E1; font-size: 0.85rem; line-height: 1.6; }
+
+        .contact-box { background: rgba(13,22,47,0.6); border: 1px solid rgba(170,124,17,0.2); border-radius: 10px; padding: 14px; margin: 12px 0; }
+        .contact-box h4 { color: #F4D068; font-size: 0.9rem; margin-bottom: 8px; }
+        .contact-box p { color: #CBD5E1; font-size: 0.85rem; margin-bottom: 4px; }
+
+        .booking-actions { display: flex; gap: 10px; margin-top: 16px; }
+        .btn-approve { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; border: none; padding: 10px 24px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.95rem; }
+        .btn-reject { background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: white; border: none; padding: 10px 24px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.95rem; }
+    </style>
 </head>
 <body>
 
@@ -25,7 +51,7 @@
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- Sidebar -->
-   <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">بيتي <span>BAYATY</span></div>
 
         <a href="mangment-home.html" class="sidebar-btn active">
@@ -47,16 +73,6 @@
             </svg>
             مراجعة العقارات
             <span class="badge" id="pendingBadge">0</span>
-        </a>
-
-        <a href="mangment-properties.html" class="sidebar-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            جميع العقارات
         </a>
 
         <div class="sidebar-section-title">المستخدمين</div>
@@ -90,6 +106,15 @@
             <span class="badge" id="supportBadge">0</span>
         </a>
 
+        <a href="support-mangment.html" class="sidebar-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18"/>
+            </svg>
+            طلبات الحجز
+            <span class="badge" id="bookingBadge">0</span>
+        </a>
+
         <div class="sidebar-bottom">
             <div class="sidebar-divider"></div>
             <a href="../splashscreen.html" class="sidebar-btn">
@@ -106,118 +131,49 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="page-header">
-            <h1>إدارة <span>الدعم الفني</span></h1>
-            <p>إدارة أرقام التواصل ورسائل الطلاب وأصحاب العقارات والرد عليها</p>
+            <h1>طلبات <span>الحجز</span></h1>
+            <p>إدارة طلبات الحجز القادمة من الطلاب مع كل التفاصيل</p>
         </div>
 
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">📩</div>
-                <div class="stat-value" id="statTotal">0</div>
-                <div class="stat-label">إجمالي الرسائل</div>
+                <div class="stat-icon">📥</div>
+                <div class="stat-value" id="totalBookings">0</div>
+                <div class="stat-label">إجمالي الطلبات</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">⏳</div>
-                <div class="stat-value" id="statPending">0</div>
+                <div class="stat-value" id="pendingBookings">0</div>
                 <div class="stat-label">قيد الانتظار</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">✅</div>
-                <div class="stat-value" id="statReplied">0</div>
-                <div class="stat-label">تم الرد عليها</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📞</div>
-                <div class="stat-value" id="statNumbers">0</div>
-                <div class="stat-label">أرقام التواصل</div>
+                <div class="stat-value" id="approvedBookings">0</div>
+                <div class="stat-label">تمت الموافقة</div>
             </div>
         </div>
 
-        <!-- Section 1: Contact Numbers Management -->
+        <!-- Bookings List -->
         <div class="form-section">
             <div class="section-header">
-                <div class="icon-circle">📞</div>
-                إدارة أرقام التواصل
+                <div class="icon-circle">📋</div>
+                قائمة طلبات الحجز
             </div>
-            <p class="section-desc">أضف أرقام التواصل التي ستظهر للطلاب وأصحاب العقارات في صفحات الدعم. يمكن للمستخدمين الضغط على الرقم للتواصل مباشرة عبر واتساب.</p>
+            <p class="section-desc">جميع طلبات الحجز من صفحة تفاصيل العقار</p>
 
-            <form id="contactForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="contactRole">الدور / الوظيفة</label>
-                        <input type="text" id="contactRole" placeholder="مثال: مدير الدعم الفني" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contactPhone">رقم التليفون (مع كود الدولة)</label>
-                        <input type="tel" id="contactPhone" placeholder="مثال: 201000000000" required>
-                        <span class="hint">اكتب الرقم بدون علامات + أو - أو مسافات</span>
-                    </div>
-                </div>
-                <div class="action-buttons" style="margin-top: 15px;">
-                    <button type="submit" class="btn btn-primary">➕ إضافة رقم</button>
-                </div>
-            </form>
-
-            <div style="margin-top: 25px;">
-                <h4 style="color: var(--gold-bright); font-size: 1rem; margin-bottom: 15px;">📋 الأرقام المضافة</h4>
-                <div class="numbers-list" id="numbersList">
-                    <div class="empty-state">
-                        <div class="empty-icon">📭</div>
-                        <h4>لا توجد أرقام بعد</h4>
-                        <p>أضف أول رقم تواصل ليظهر للمستخدمين</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: Messages Management -->
-        <div class="form-section">
-            <div class="section-header">
-                <div class="icon-circle">📩</div>
-                رسائل المستخدمين
-            </div>
-            <p class="section-desc">عرض وإدارة رسائل الدعم الواردة من الطلاب وأصحاب العقارات والرد عليها</p>
-
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('all', this)">الكل</button>
-                <button class="tab-btn" onclick="switchTab('pending', this)">⏳ قيد الانتظار</button>
-                <button class="tab-btn" onclick="switchTab('replied', this)">✅ تم الرد</button>
-                <button class="tab-btn" onclick="switchTab('students', this)">🎓 الطلاب</button>
-                <button class="tab-btn" onclick="switchTab('owners', this)">🏠 أصحاب العقارات</button>
-            </div>
-
-            <div id="messagesContainer">
+            <div id="bookingsList">
                 <div class="empty-state">
                     <div class="empty-icon">📭</div>
-                    <h4>لا توجد رسائل بعد</h4>
-                    <p>ستظهر هنا رسائل المستخدمين الواردة</p>
+                    <h4>لا توجد طلبات حجز</h4>
+                    <p>الطلبات ستظهر هنا عندما يضغط الطلاب على "احجز الآن"</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Reply Modal -->
-    <div class="reply-modal-overlay" id="replyModal">
-        <div class="reply-modal-box">
-            <h3>📨 الرد على الرسالة</h3>
-            <div class="message-details" id="replyDetails"></div>
-            <textarea class="reply-textarea" id="replyText" placeholder="اكتب ردك هنا..."></textarea>
-            <div class="action-buttons" style="justify-content: center;">
-                <button class="btn btn-primary btn-sm" onclick="submitReply()">📨 إرسال الرد</button>
-                <button class="btn btn-secondary btn-sm" onclick="closeReplyModal()">❌ إلغاء</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-<<<<<<< HEAD
-
     <script src="../js/mangment.js/support.js"></script>
-      
-=======
-    <script src="{{ asset('js/mangment.js/support.js') }}"></script>
->>>>>>> new-origin/abdulrhman
 </body>
 </html>

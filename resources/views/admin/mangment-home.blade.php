@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/mangment.css/home.css">
-=======
     <link rel="stylesheet" href="{{ asset('css/mangment.css/home.css') }}">
->>>>>>> new-origin/abdulrhman
     <title>لوحة التحكم - بيتي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -171,8 +167,8 @@
                 <p>عرض ومراجعة العقارات المُرفوعة حديثاً من أصحاب السكن واتخاذ قرار الموافقة أو الرفض</p>
                 <div class="link-arrow">الذهاب الآن ←</div>
             </a>
-           
-           
+
+
             <a href="mangment-all.html" class="link-card">
                 <div class="link-icon" style="background:rgba(139,92,246,0.15);">👨‍🎓</div>
                 <h3>المستخدمين والطلبات</h3>
@@ -227,12 +223,7 @@
             بيتي BAYATY — لوحة تحكم الإدارة © 2026
         </div>
     </main>
-<<<<<<< HEAD
 <script src="../js/mangment.js/home.js"></script>
-  
-=======
-    <script src="{{ asset('js/mangment.js/home.js') }}"></script>
 
->>>>>>> new-origin/abdulrhman
 </body>
 </html>

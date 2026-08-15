@@ -58,22 +58,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="academicYear">الفرقة الدراسية</label>
-                    <select id="academicYear" name="academic_year" required>
-                        <option value="" disabled selected>اختر الفرقة</option>
-                        <option value="1">الفرقة الأولى</option>
-                        <option value="2">الفرقة الثانية</option>
-                        <option value="3">الفرقة الثالثة</option>
-                        <option value="4">الفرقة الرابعة</option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>رفع بطاقة الرقم القومي</label>
-                    <div class="file-upload">
-                        <span id="txtId">🆔 اضغط لرفع الملف</span>
-                        <input type="file" id="natId" name="nat_id" accept="image/*" required onchange="document.getElementById('txtId').innerText = '✓ تم اختيار الملف'">
-                    </div>
+                    <label for="nationalId">الرقم القومي</label>
+                    <input type="text" id="nationalId" name="national_id"
+                           pattern="\d{14}"
+                           maxlength="14"
+                           minlength="14"
+                           inputmode="numeric"
+                           title="الرقم القومي يجب أن يكون 14 رقم بالضبط"
+                           required>
                 </div>
 
             </div>
@@ -82,7 +74,6 @@
         </form>
     </div>
 
-    <script src="{{ asset('js/auth/register/login-stu.js') }}"></script>
-
+   <script src="./js/login-stu.js"></script>
 </body>
 </html>

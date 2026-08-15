@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/owner-css/owner-profile.css">
-=======
-    <link rel="stylesheet" href="{{ asset('css/owner-css/owner-profile.css') }}">
-    <script src="{{ asset('js/owner-js/owner-buld.js') }}"></script>
->>>>>>> new-origin/abdulrhman
     <title>الملف الشخصي - بيتي</title>
-   
+
 <base target="_blank">
 </head>
 <body>
@@ -68,7 +63,7 @@
     <main class="main-content">
         <div class="page-header">
             <h1>الملف <span>الشخصي</span></h1>
-            <p>عرض بياناتك الشخصية — للتعديل تواصل مع الإدارة</p>
+            <p>عرض بياناتك الشخصية — للتعديل يلزم موافقة الإدارة</p>
         </div>
 
         <div class="profile-card">
@@ -77,6 +72,7 @@
             <div class="profile-role" id="profileRole">
                 <span class="badge badge-owner" id="typeBadge">🏠 صاحب سكن</span>
                 <span class="badge badge-banned" id="statusBadge" style="display:none;">🚫 محظور</span>
+                <span class="badge" id="editStatusBadge" style="display:none; background:#f59e0b; color:#fff; margin-right:6px;"></span>
             </div>
             <div class="profile-stats">
                 <div class="profile-stat">
@@ -95,12 +91,17 @@
         </div>
 
         <div class="form-section">
-            <div class="section-header">
-                <div class="icon-circle">👤</div>
-                البيانات الشخصية <span style="color:var(--text-muted);font-size:0.8rem;margin-right:8px;">(للتعديل تواصل مع الإدارة)</span>
+            <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="icon-circle">👤</div>
+                    البيانات الشخصية
+                </div>
+                <button id="editBtn" onclick="toggleEdit()" class="sidebar-btn" style="width:auto; padding:8px 16px; font-size:0.85rem;">
+                    ✏️ تعديل البيانات
+                </button>
             </div>
             <div class="info-grid" id="infoGrid">
-                </div>
+            </div>
         </div>
 
         <div class="form-section">
@@ -109,7 +110,7 @@
                 المستندات المرفقة
             </div>
             <div class="info-grid" id="docsGrid">
-                </div>
+            </div>
         </div>
     </main>
 
@@ -120,12 +121,7 @@
             <div class="img-modal-title" id="imgModalTitle">مستند المستخدم</div>
         </div>
     </div>
-<<<<<<< HEAD
 <script src="../js/owner-js/profile-owner.js"></script>
-   
-=======
 
-    <script src="{{ asset('js/owner-js/profile-owner.js') }}"></script>
->>>>>>> new-origin/abdulrhman
 </body>
 </html>

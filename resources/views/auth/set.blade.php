@@ -42,15 +42,7 @@
     <footer class="footer-login">
         <p>ليس لديك حساب بعد؟ <a href="#" id="registerLink">سجل حساباً جديداً من هنا</a></p>
     </footer>
-
-
-    <script>
-        const studentRegistrationUrl = "{{ route('student.registration') }}";
-        const ownerRegistrationUrl = "{{ route('owner.registration') }}";
-        const loginUrl = "{{ route('Login.enter') }}";
-    </script>
-    <script src="{{ asset('js/set.js') }}"></script>
-
+<script src="./js/set.js"> </script>
 
 </body>
 </html>

@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/mangment.css/xx.css">
-    <title>سجل الأشخاص</title>
-   
-=======
     <link rel="stylesheet" href="{{ asset('css/mangment.css/xx.css') }}">
-    <title>سجل الأشخاص</title>
->>>>>>> new-origin/abdulrhman
-<base target="_blank">
+    <title>سجل الأشخاص - بيتي</title>
+    <base target="_blank">
 </head>
 <body>
 
@@ -50,16 +44,6 @@
             <span class="badge" id="pendingBadge">0</span>
         </a>
 
-        <a href="mangment-properties.html" class="sidebar-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            جميع العقارات
-        </a>
-
         <div class="sidebar-section-title">المستخدمين</div>
 
         <a href="mangment-all.html" class="sidebar-btn">
@@ -91,6 +75,15 @@
             <span class="badge" id="supportBadge">0</span>
         </a>
 
+        <a href="support-mangment.html" class="sidebar-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18"/>
+            </svg>
+            طلبات الحجز
+            <span class="badge" id="bookingBadge">0</span>
+        </a>
+
         <div class="sidebar-bottom">
             <div class="sidebar-divider"></div>
             <a href="../splashscreen.html" class="sidebar-btn">
@@ -103,11 +96,12 @@
             </a>
         </div>
     </aside>
+
     <!-- Main Content -->
     <main class="main-content">
         <div class="page-header">
             <h1>سجل <span>الأشخاص</span></h1>
-            <p>إضافة وحفظ بيانات الأشخاص بسهولة</p>
+            <p>إضافة وحفظ بيانات الأشخاص وإعدادات الدفع</p>
         </div>
 
         <!-- Stats -->
@@ -135,7 +129,7 @@
                 <div class="icon-circle">➕</div>
                 إضافة شخص جديد
             </div>
-            <p class="section-desc">أدخل بيانات الشخص ثم اضغط حفظ لإضافته للسجل</p>
+            <p class="section-desc">أدخل بيانات الشخص ثم اضغط حفظ</p>
 
             <form id="personForm">
                 <div class="form-grid">
@@ -163,13 +157,42 @@
             </form>
         </div>
 
+        <!-- Booking Config Section -->
+        <div class="form-section" style="margin-top: 24px; border: 2px solid rgba(170,124,17,0.3);">
+            <div class="section-header">
+                <div class="icon-circle">⚙️</div>
+                إعدادات الحجز والدفع
+            </div>
+            <p class="section-desc">هذه البيانات تظهر للطلاب عند الضغط على "احجز الآن"</p>
+
+            <form id="configForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="configPhone">رقم هاتف التواصل (واتساب) *</label>
+                        <input type="tel" id="configPhone" placeholder="مثال: 01001234567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="configBarcode">صورة الباركود (QR Code) *</label>
+                        <input type="file" id="configBarcode" accept="image/*" required>
+                        <small style="color: #94A3B8; display: block; margin-top: 4px;">📷 ارفع صورة الباركود للدفع</small>
+                    </div>
+                </div>
+                <div id="barcodePreview" style="margin-top: 12px; display: none;">
+                    <img id="barcodePreviewImg" src="" style="max-width: 200px; max-height: 200px; border-radius: 12px; border: 2px solid #AA7C11;">
+                </div>
+                <div class="action-buttons" style="margin-top: 15px;">
+                    <button type="submit" class="btn btn-primary">💾 حفظ الإعدادات</button>
+                </div>
+            </form>
+        </div>
+
         <!-- Persons List -->
-        <div class="form-section">
+        <div class="form-section" style="margin-top: 24px;">
             <div class="section-header">
                 <div class="icon-circle">📋</div>
                 الأشخاص المسجلين
             </div>
-            <p class="section-desc">قائمة بجميع الأشخاص المسجلين في السجل</p>
+            <p class="section-desc">قائمة بجميع الأشخاص المسجلين</p>
 
             <div class="persons-list" id="personsList">
                 <div class="empty-state">
@@ -183,11 +206,6 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-<<<<<<< HEAD
-<script src="../js/mangment.js/xx.js"></script>
-   
-=======
-    <script src="{{ asset('js/mangment.js/xx.js') }}"></script>
->>>>>>> new-origin/abdulrhman
+    <script src="../js/mangment.js/xx.js"></script>
 </body>
 </html>

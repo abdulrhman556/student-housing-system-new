@@ -30,6 +30,8 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
+<base target="_blank">
 </head>
 <body class="bg-white text-slate-800 min-h-screen flex flex-col justify-between pb-16 md:pb-0">
 
@@ -198,19 +200,12 @@
             <h5>📞 أرقام التواصل السريع</h5>
             <div id="contactsList">جاري التحميل...</div>
         </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="empty-chat">
-                <div style="font-size: 2rem; margin-bottom: 10px;">👋</div>
-                <div>أهلاً بيك! أرسل رسالتك لفريق الدعم</div>
-            </div>
-        </div>
+
         <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+
             <button class="chat-send" onclick="sendChatMessage()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
+
+
             </button>
         </div>
     </div>
@@ -222,14 +217,6 @@
     </button>
 </div>
 
-<!-- Notification Banner -->
-<div class="notification-banner" id="notifBanner">
-    <div class="notif-icon">👑</div>
-    <div class="notif-text">
-        <h5 id="notifTitle">تم الرد على رسالتك!</h5>
-        <p id="notifText">فريق الدعم رد على استفسارك. افتح الشات لمشاهدة الرد.</p>
-    </div>
-</div>
 
 <!-- Bottom Navigation Bar (Mobile Only) -->
 <nav class="md:hidden fixed bottom-0 w-full z-40 bg-gradient-to-r from-[#070B19] to-[#1E293B] border-t border-[#AA7C11]/30 flex justify-around items-center py-2 rounded-t-xl shadow-2xl">
@@ -241,7 +228,7 @@
         <span class="material-symbols-outlined">favorite</span>
         <span class="text-[10px] font-medium mt-0.5">المفضلة</span>
     </a>
-    <a href="student-support.html" class="flex flex-col items-center justify-center text-slate-300 hover:text-[#F4D068] p-1">
+    <a href="#" onclick="showSupportPhone(event)" class="flex flex-col items-center justify-center text-slate-300 hover:text-[#F4D068] p-1">
         <span class="material-symbols-outlined">support_agent</span>
         <span class="text-[10px] font-medium mt-0.5">الدعم</span>
     </a>
@@ -258,9 +245,8 @@
         <p>© 2026 إسكان طلاب بني سويف - المساحة وهيكلية العرض مطورة بالكامل لخدمة شاشات التصنيف والتحكم.</p>
     </div>
 </footer>
+<script src="../js/home-js/home.js"></script>
 
-
-<script src="{{ asset('js/home-js/home.js') }}"></script>
 
 </body>
 </html>

@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link rel="stylesheet" href="{{ asset('css/home-css/favority.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home-css/favorites.css') }}">
     <title>العقارات المفضلة | BAYATY - بيتي</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    
-   
+
+
 
     <script id="tailwind-config">
         tailwind.config = {
@@ -40,7 +40,7 @@
                 <a class="text-sm font-semibold text-slate-400 hover:text-[#F4D068] transition-colors" href="profile.html">بياناتي</a>
             </nav>
         </div>
-        
+
         <div class="flex items-center gap-4">
             <a href="home.html" class="btn-interact flex items-center gap-1 text-xs font-bold text-[#F4D068] bg-white/10 border border-[#AA7C11]/40 px-3 py-1.5 rounded-full hover:bg-white/20">
                 <span class="material-symbols-outlined text-sm">arrow_back</span>
@@ -52,7 +52,7 @@
 
 <!-- Main Container (مساحة العرض البيضاء النقية والمحاطة بالـ فلاتر لتتناسق تماماً مع شاشتك الرئيسية) -->
 <main class="max-w-7xl mx-auto px-4 md:px-12 py-8 flex-grow bg-white w-full rounded-b-2xl shadow-xl">
-    
+
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 border-b border-slate-100 pb-4">
         <div>
@@ -112,8 +112,7 @@
         <p>© 2026 منصة بيتي لإسكان طلاب بني سويف. شاشة المفضلة متصلة بالكامل بالـ localStorage.</p>
     </div>
 </footer>
-
-<script src="{{ asset('js/home-js/favourty.js') }}"></script>
+<script src="../js/home-js/favourty.js"></script>
 
 
 </body>

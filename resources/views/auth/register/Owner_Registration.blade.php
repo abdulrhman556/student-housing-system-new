@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/login-owner.css') }}">
-
     <title>تسجيل بيانات صاحب السكن - بيتي</title>
 
 </head>
@@ -16,7 +15,7 @@
             <p>يرجى إدخال البيانات المطلوبة لتهيئة حسابك</p>
         </div>
 
-        <form action="./owner/add-property.html" method="post" id="ownerForm">
+        <form action="./owner/add-property.html" method="GET" id="ownerForm">
             <div class="form-grid">
 
                 <div class="form-group">
@@ -59,26 +58,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="propertyType">نوع العقار</label>
-                    <select id="propertyType" name="property_type" required>
-                        <option value="" disabled selected>اختر نوع العقار</option>
-                        <option value="apartment">شقة</option>
-                        <option value="room">غرفة</option>
-                        <option value="studio">استوديو</option>
-                        <option value="villa">فيلا</option>
-                    </select>
+                    <label for="nationalId">الرقم القومي</label>
+                    <input type="text" id="nationalId" name="national_id"
+                           pattern="\d{14}"
+                           maxlength="14"
+                           minlength="14"
+                           inputmode="numeric"
+                           title="الرقم القومي يجب أن يكون 14 رقم بالضبط"
+                           required>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="address">عنوان السكن بالتفصيل</label>
+                    <label for="address">العنوان الشخصي</label>
                     <textarea id="address" name="address" required placeholder="المحافظة - المنطقة - الشارع - رقم العقار"></textarea>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>رفع بطاقة الرقم القومي</label>
+                    <label>رفع بطاقة الرقم القومي (اختياري)</label>
                     <div class="file-upload">
                         <span id="txtId">🆔 اضغط لرفع الملف</span>
-                        <input type="file" id="natId" name="nat_id" accept="image/*" required onchange="document.getElementById('txtId').innerText = '✓ تم اختيار الملف'">
+                        <input type="file" id="natId" name="nat_id" accept="image/*" onchange="document.getElementById('txtId').innerText = '✓ تم اختيار الملف'">
                     </div>
                 </div>
 
@@ -87,6 +86,7 @@
             <button type="submit" class="submit-btn">إتمام التسجيل والدخول</button>
         </form>
     </div>
-<script src="{{ asset('js/auth/register/owner-login.js') }}"></script>
+<script src="./js/owner-lofin.js"></script>
+
 </body>
 </html>

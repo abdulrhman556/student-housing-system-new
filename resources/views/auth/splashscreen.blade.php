@@ -20,9 +20,8 @@
     <a href="#how">كيف يعمل؟</a>
     <a href="#services">الخدمات</a>
     <a href="#testimonials">آراء الطلاب</a>
-<button class="nav-cta" onclick="location.href='{{ route('set') }}'">
-    ابدأ الآن
-</button>  </div>
+    <button class="nav-cta" onclick="location.href='set.html'">ابدأ الآن</button>
+  </div>
   <div class="ham" id="ham" onclick="document.getElementById('nav').classList.toggle('open')">
     <span></span><span></span><span></span>
   </div>
@@ -40,7 +39,7 @@
     </h1>
     <p class="hero-desc" style="max-width:520px;">آلاف الوحدات السكنية المعتمدة قريبة من جامعتك — تصفح على الخريطة، قارن الأسعار، واحجز في دقائق</p>
     <div class="hero-btns">
-      <button class="btn-gold" onclick="location.href='{{ route('set') }}'">ابدأ الآن مجاناً</button>
+      <button class="btn-gold" onclick="location.href='set.html'">ابدأ الآن مجاناً</button>
       <button class="btn-outline-white" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">كيف يعمل؟</button>
     </div>
     <div class="hero-stats">
@@ -248,8 +247,8 @@
     <h2 class="cta-title">جاهز <span class="gold-grad">تبدأ؟</span></h2>
     <p class="cta-sub">انضم لآلاف الطلاب اللي لاقوا سكنهم المثالي مع Bayaty | بيتي</p>
     <div class="cta-btns">
-      <button class="btn-gold" onclick="location.href='{{ route('set') }}'">ابدأ الآن مجاناً</button>
-      <button class="btn-blue" onclick="location.href='{{ route('set') }}'">تسجيل الدخول</button>
+      <button class="btn-gold" onclick="location.href='set.html'">ابدأ الآن مجاناً</button>
+      <button class="btn-blue" onclick="location.href='set.html'">تسجيل الدخول</button>
     </div>
   </div>
 </section>
@@ -273,14 +272,14 @@
     </div>
     <div class="foot-col">
       <h5>للطلاب</h5>
-      <a href="{{ route('set') }}">إنشاء حساب</a>
-      <a href="{{ route('set') }}">تصفح الوحدات</a>
+      <a href="set.html">إنشاء حساب</a>
+      <a href="set.html">تصفح الوحدات</a>
       <a href="#">كيفية الحجز</a>
       <a href="#">الأسئلة الشائعة</a>
     </div>
     <div class="foot-col">
       <h5>للملاك</h5>
-      <a href="{{ route('set') }}">أضف وحدتك</a>
+      <a href="set.html">أضف وحدتك</a>
       <a href="#">إدارة الحجوزات</a>
       <a href="#">سياسة الخصوصية</a>
       <a href="#">تواصل معنا</a>
@@ -295,9 +294,7 @@
     </div>
   </div>
 </footer>
-
-
-<script src="{{ asset('js/spla.js') }}"></script>
+<script src="./js/spla.js"></script>
 
 </body>
 </html>

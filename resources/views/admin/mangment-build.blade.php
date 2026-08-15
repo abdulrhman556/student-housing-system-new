@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/mangment.css/buld.css">
-    <title>مراجعة العقارات - بيتي</title>
-   
-=======
     <link rel="stylesheet" href="{{ asset('css/mangment.css/buld.css') }}">
     <title>مراجعة العقارات - بيتي</title>
->>>>>>> new-origin/abdulrhman
-<base target="_blank">
+    <base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -52,15 +46,7 @@
             <span class="badge" id="pendingBadge">0</span>
         </a>
 
-        <a href="mangment-properties.html" class="sidebar-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            جميع العقارات
-        </a>
+
 
         <div class="sidebar-section-title">المستخدمين</div>
 
@@ -167,6 +153,42 @@
         </div>
     </div>
 
+    <!-- Approve Confirmation Modal -->
+    <div class="modal-overlay" id="approveModal">
+        <div class="modal-box">
+            <h3>✅ تأكيد الموافقة</h3>
+            <p>هل أنت متأكد من الموافقة على نشر هذا العقار؟</p>
+            <div class="modal-actions">
+                <button class="action-btn secondary" onclick="closeModal('approveModal')">إلغاء</button>
+                <button class="action-btn approve" onclick="confirmApprove()">موافقة ونشر</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Confirmation Modal -->
+    <div class="modal-overlay" id="rejectModal">
+        <div class="modal-box">
+            <h3>❌ تأكيد الرفض</h3>
+            <p>هل أنت متأكد من رفض هذا العقار؟ سيتم نقله لقسم المرفوض.</p>
+            <div class="modal-actions">
+                <button class="action-btn secondary" onclick="closeModal('rejectModal')">إلغاء</button>
+                <button class="action-btn reject" onclick="confirmReject()">رفض</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <h3>🗑️ تأكيد الحذف</h3>
+            <p>هل أنت متأكد من حذف هذا العقار نهائياً؟ لا يمكن التراجع.</p>
+            <div class="modal-actions">
+                <button class="action-btn secondary" onclick="closeModal('deleteModal')">إلغاء</button>
+                <button class="action-btn reject" onclick="confirmDelete()">حذف نهائي</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast">
         <div class="toast-icon">✅</div>
@@ -175,13 +197,7 @@
             <p id="toastText">تمت العملية بنجاح</p>
         </div>
     </div>
-<<<<<<< HEAD
-<script src="../js/mangment.js/buld.js"></script>
-    
+
+    <script src="../js/mangment.js/buld.js"></script>
 </body>
 </html>
-=======
-    <script src="{{ asset('js/mangment.js/buld.js') }}"></script>
-</body>
-</html>
->>>>>>> new-origin/abdulrhman

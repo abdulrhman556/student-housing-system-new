@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المستخدمين - بيتي</title>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/mangment.css/all.css">
-=======
     <link rel="stylesheet" href="{{ asset('css/mangment.css/all.css') }}">
->>>>>>> new-origin/abdulrhman
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-   
+
 </head>
 <body>
 
@@ -42,15 +38,7 @@
             <span class="badge" id="pendingBadge">0</span>
         </a>
 
-        <a href="mangment-properties.html" class="sidebar-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            جميع العقارات
-        </a>
+
 
         <div class="sidebar-section-title">المستخدمين</div>
 
@@ -109,6 +97,14 @@
             <div class="stat-card"><div class="stat-number" id="totalUsers">0</div><div class="stat-label">إجمالي المستخدمين</div></div>
         </div>
 
+        <!-- قسم طلبات تعديل البيانات -->
+        <div id="editRequestsSection" style="display:none; margin-bottom:24px;">
+            <div class="table-header" style="margin-bottom:12px;">
+                <h3>📝 طلبات تعديل البيانات</h3>
+            </div>
+            <div id="editRequestsList" style="display:grid; gap:12px;"></div>
+        </div>
+
         <div class="tabs-wrapper">
             <button class="tab-btn active" onclick="switchTab('students')" id="tab-students"><span>👨‍🎓</span> الطلاب</button>
             <button class="tab-btn" onclick="switchTab('owners')" id="tab-owners"><span>🏠</span> المُلاك</button>
@@ -148,14 +144,7 @@
     </div>
 
     <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">تمت العملية بنجاح</span></div>
-<<<<<<< HEAD
 <script src="../js/mangment.js/all.js"></script>
-   
-</body>
-</html>
-=======
-    <script src="{{ asset('js/mangment.js/all.js') }}"></script>
-</body>
-</html>
 
->>>>>>> new-origin/abdulrhman
+</body>
+</html>

@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link rel="stylesheet" href="{{ asset('css/home-css/profil-stu.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home-css/profile-student.css') }}">
     <title>بياناتي الشخصية | BAYATY - بيتي</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
 
@@ -59,25 +59,23 @@
                 <h2 id="welcomeName" class="text-lg font-extrabold text-white">طالب منصة بيتي</h2>
                 <p id="welcomeEmail" class="text-slate-400 text-xs tracking-wide">user@bayaty.com</p>
                 <span class="inline-block text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/40 px-2.5 py-0.5 rounded-full">👨‍🎓 حساب طالب</span>
+                <div class="flex items-center gap-3 mt-3 flex-wrap justify-center sm:justify-start">
+                    <button id="editBtn" onclick="toggleEdit()" class="btn-interact text-xs bg-blue-500/20 text-blue-300 border border-blue-500/40 px-3 py-1.5 rounded-full hover:bg-blue-500/30 transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">edit</span>
+                        تعديل البيانات
+                    </button>
+                    <span id="modifiedBadge" class="hidden text-[10px] bg-orange-500/20 text-orange-300 border border-orange-500/40 px-2 py-0.5 rounded-full"></span>
+                </div>
             </div>
         </div>
 
         <div>
             <h3 class="text-sm font-bold text-[#0D162F] mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-[#AA7C11]">person</span>
-                البيانات الشخصية <span class="text-xs text-slate-400 font-normal">(للتعديل تواصل مع الإدارة)</span>
+                البيانات الشخصية <span class="text-xs text-slate-400 font-normal">(اضغط تعديل للتعديل)</span>
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="infoGrid">
-                </div>
-        </div>
-
-        <div>
-            <h3 class="text-sm font-bold text-[#0D162F] mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-[#AA7C11]">description</span>
-                المستندات المرفقة
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="docsGrid">
-                </div>
+            </div>
         </div>
     </div>
 </main>
@@ -104,16 +102,7 @@
     </div>
 </footer>
 
-<div id="imgModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px;" onclick="closeImgModal()">
-    <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
-        <button onclick="closeImgModal()" style="position:absolute; top:-40px; right:0; width:36px; height:36px; border-radius:50%; background:#ef4444; color:white; border:none; font-size:1.2rem; cursor:pointer; z-index:10;">✕</button>
-        <img id="imgModalSrc" src="" style="max-width:90vw; max-height:85vh; border-radius:12px; border:2px solid #F4D068;">
-        <p id="imgModalTitle" style="text-align:center; color:white; margin-top:10px; font-weight:600;"></p>
-    </div>
-</div>
-<script src="{{ asset('js/home-js/profile-stu.js') }}"></script>
-
-
+<script src="../js/home-js/profile-stu.js"></script>
 
 </body>
 </html>

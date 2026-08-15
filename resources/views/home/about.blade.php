@@ -5,11 +5,10 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>الأسئلة الشائعة وعن بيتي | BAYATY</title>
     <link rel="stylesheet" href="{{ asset('css/home-css/about.css') }}">
-
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    
+
     <script id="tailwind-config">
         tailwind.config = {
             theme: {
@@ -38,7 +37,7 @@
                 <a class="text-sm font-semibold text-slate-400 hover:text-[#F4D068] transition-colors" href="profile.html">بياناتي</a>
             </nav>
         </div>
-        
+
         <div class="flex items-center gap-4">
             <a href="home.html" class="btn-interact flex items-center gap-1 text-xs font-bold text-[#F4D068] bg-white/10 border border-[#AA7C11]/40 px-3 py-1.5 rounded-full hover:bg-white/20">
                 <span class="material-symbols-outlined text-sm">arrow_back</span>
@@ -50,7 +49,7 @@
 
 <!-- Main Container (المساحة البيضاء الشاملة المريحة للعين المتناسقة مع باقي الشاشات) -->
 <main class="max-w-4xl mx-auto px-4 md:px-12 py-8 flex-grow bg-white w-full rounded-b-2xl shadow-2xl text-slate-800">
-    
+
     <div class="space-y-10">
         <!-- Section 1: عن منصة بيتي (About Us) -->
         <section class="space-y-4">
@@ -58,7 +57,7 @@
                 <h1 class="text-2xl font-extrabold text-[#070B19]">منصة بيتي - BAYATY</h1>
                 <p class="text-[#AA7C11] text-xs font-bold">المنصة الأولى الموثقة لإسكان الطلاب في محافظة بني سويف</p>
             </div>
-            
+
             <p class="text-slate-600 text-sm leading-relaxed text-center max-w-2xl mx-auto">
                 تأسست منصة **بيتي** لحل مشكلة السكن الجامعي والمغتربين لطلاب جامعة بني سويف، الجامعة الأهلية، الجامعة التكنولوجية، والمعاهد العليا الخاصة. نهدف إلى توفير حلقة وصل آمنة ومباشرة بين الطالب وصاحب السكن (Owner) تحت مراجعة وإشراف دقيق من إدارة المنصة (Management) لضمان توفير بيئة معيشية ممتازة ومستقرة للمذاكرة.
             </p>
@@ -159,7 +158,8 @@
         <p>© 2026 إسكان طلاب بني سويف - شاشة الدعم الفني والمعلومات والأسئلة الشائعة.</p>
     </div>
 </footer>
-<script src="{{ asset('js/home-js/about.js') }}"></script>
+<script src="../js/home-js/about.js"></script>
+
 
 </body>
 </html>

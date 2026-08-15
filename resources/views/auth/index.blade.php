@@ -26,7 +26,7 @@
     <div class="corner bl"></div>
     <div class="corner br"></div>
     <div class="photo">
-      <img id="userImg" src="{{ asset('image/logo.jpeg') }}" alt=""
+      <img id="userImg" src="./image/logo.jpeg" alt=""
         onerror="this.style.display='none';document.getElementById('ph').style.display='flex'">
       <div class="photo-ph" id="ph">
         <svg viewBox="0 0 64 64" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -45,12 +45,7 @@
     </div>
   </div>
 </div>
-
-{{-- laravel no access the js --}}
-<script>
-    const splashScreenUrl = "{{ route('splashscreen') }}";
-</script>
-<script src="{{ asset('js/index.js') }}"></script>
+<script src="./js/index.js"></script>
 
 </body>
 </html>

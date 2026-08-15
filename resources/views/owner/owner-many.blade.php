@@ -4,13 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/owner-css/many.css">
-=======
     <link rel="stylesheet" href="{{ asset('css/owner-css/many.css') }}">
->>>>>>> new-origin/abdulrhman
     <title>المدفوعات والإيرادات - بيتي</title>
-   
+
 </head>
 <body>
 
@@ -202,13 +198,8 @@
             </div>
         </div>
     </main>
-<<<<<<< HEAD
 <script src="../js/owner-js/mony.js"></script>
-=======
 
-<script src="{{ asset('js/owner-js/mony.js') }}"></script>
->>>>>>> new-origin/abdulrhman
 
-    
 </body>
 </html>

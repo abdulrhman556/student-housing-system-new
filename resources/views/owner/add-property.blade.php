@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../css/owner-css/add.css">
-=======
     <link rel="stylesheet" href="{{ asset('css/owner-css/add.css') }}">
->>>>>>> new-origin/abdulrhman
     <title>إضافة عقار جديد - بيتي</title>
-    
-<base target="_blank">
-<base target="_blank">
+    <base target="_blank">
 </head>
 <body>
 
@@ -108,7 +102,7 @@
                 </div>
             </div>
 
-            <!-- Section 2: Photos & Video -->
+            <!-- Section 2: Photos -->
             <div class="form-section">
                 <div class="section-header">
                     <div class="icon-circle">📷</div>
@@ -151,10 +145,6 @@
                 </div>
 
                 <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="mapLink">رابط الموقع على خرائط Google</label>
-                        <input type="url" id="mapLink" name="map_link" placeholder="https://maps.google.com/...">
-                    </div>
                     <div class="form-group">
                         <label for="city">المدينة</label>
                         <input type="text" id="city" name="city" placeholder="مثال: القاهرة" required>
@@ -241,39 +231,16 @@
                 </div>
             </div>
 
-            <!-- Section 6: Pricing (Student Housing) -->
+            <!-- Section 6: Dynamic Pricing -->
             <div class="form-section">
                 <div class="section-header">
                     <div class="icon-circle">💰</div>
-                    تسعير سكن الطلاب
+                    <span id="pricingTitle">التسعير</span>
                 </div>
-                <p class="section-desc">حدد سعر الغرفة حسب عدد الطلاب في كل غرفة (سكن طلاب)</p>
+                <p class="section-desc" id="pricingDesc">اختر نوع العقار لعرض خيارات التسعير المناسبة</p>
 
-                <div class="pricing-row">
-                    <div class="form-group">
-                        <label for="priceSingle">غرفة فردية (طالب واحد)</label>
-                        <div class="price-input-wrapper">
-                            <input type="number" id="priceSingle" name="price_single" min="0" placeholder="2000">
-                            <span class="currency">ج.م</span>
-                        </div>
-                        <span class="hint">سعر الغرفة للطالب الواحد</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="priceDouble">غرفة مزدوجة (طالبين)</label>
-                        <div class="price-input-wrapper">
-                            <input type="number" id="priceDouble" name="price_double" min="0" placeholder="1500">
-                            <span class="currency">ج.م</span>
-                        </div>
-                        <span class="hint">سعر الغرفة لكل طالب</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="priceTriple">غرفة ثلاثية (3 طلاب)</label>
-                        <div class="price-input-wrapper">
-                            <input type="number" id="priceTriple" name="price_triple" min="0" placeholder="1200">
-                            <span class="currency">ج.م</span>
-                        </div>
-                        <span class="hint">سعر الغرفة لكل طالب</span>
-                    </div>
+                <div id="pricingContainer">
+                    <p style="color: var(--text-muted); padding: 10px 0;">اختر نوع العقار أولاً</p>
                 </div>
             </div>
 
@@ -320,29 +287,14 @@
                 </div>
             </div>
 
-            <!-- Section 8: Contact & Policies -->
+            <!-- Section 8: Description Only -->
             <div class="form-section">
                 <div class="section-header">
-                    <div class="icon-circle">📋</div>
-                    التفاصيل والقواعد
+                    <div class="icon-circle">📝</div>
+                    وصف العقار
                 </div>
 
-                <div class="contact-grid">
-                    <div class="contact-item">
-                        <span class="contact-icon">📞</span>
-                        <input type="tel" placeholder="رقم التليفون (اختياري)" name="contact_phone" id="contactPhone">
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">💬</span>
-                        <input type="tel" placeholder="رقم واتساب (اختياري)" name="contact_whatsapp" id="contactWhatsapp">
-                    </div>
-                    <div class="contact-item full-width">
-                        <span class="contact-icon">📧</span>
-                        <input type="email" placeholder="بريد إلكتروني (اختياري)" name="contact_email" id="contactEmail">
-                    </div>
-                </div>
-
-                <div class="form-group" style="margin-top: 20px;">
+                <div class="form-group">
                     <label for="description">وصف مفصل للعقار</label>
                     <textarea class="desc-textarea" id="description" name="description" placeholder="اكتب وصفاً مفصلاً للعقار يتضمن المميزات والقواعد..."></textarea>
                 </div>
@@ -380,13 +332,7 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-<script src="../js/owner-js/add.js"></script>
-   
-=======
 
-
-<script src="{{ asset('js/owner-js/add.js') }}"></script>
->>>>>>> new-origin/abdulrhman
+    <script src="../js/owner-js/add.js"></script>
 </body>
 </html>
