@@ -10,6 +10,35 @@ use Illuminate\Http\Request;
 class AdminUserController extends Controller
 {
     /**
+     * List accounts for the administration panel without exposing them
+     * through public endpoints.
+     */
+    public function students(Request $request): JsonResponse
+    {
+        return $this->usersByRole($request, 'student');
+    }
+
+    public function owners(Request $request): JsonResponse
+    {
+        return $this->usersByRole($request, 'owner');
+    }
+
+    private function usersByRole(Request $request, string $role): JsonResponse
+    {
+        $perPage = min(max((int) $request->input('per_page', 50), 1), 100);
+        $query = User::where('role', $role)->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $query->paginate($perPage),
+        ]);
+    }
+
+    /**
      * عرض كل حسابات الـ Owners في انتظار موافقة الأدمن
      */
     public function pendingOwners(Request $request): JsonResponse

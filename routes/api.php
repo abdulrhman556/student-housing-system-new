@@ -7,6 +7,7 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyImageController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\AdminBookingController;
 use App\Http\Controllers\Api\AdminDashboardController;
@@ -38,6 +39,7 @@ Route::get('/units/{id}',                    [UnitController::class, 'show']);
 Route::get('/governorates',               [LocationController::class, 'governorates']);
 Route::get('/governorates/{id}/cities',   [LocationController::class, 'cities']);
 Route::get('/cities/{id}/universities',   [LocationController::class, 'universities']);
+Route::get('/amenities',                  [AmenityController::class, 'index']);
 
 Route::get('/properties/{property}/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{review}',              [ReviewController::class, 'show']);
@@ -140,6 +142,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin')->group(function () {
 
     Route::get('/admin/owners/pending',        [AdminUserController::class, 'pendingOwners']);
+    Route::get('/admin/students',              [AdminUserController::class, 'students']);
+    Route::get('/admin/owners',                [AdminUserController::class, 'owners']);
     Route::patch('/admin/owners/{id}/approve', [AdminUserController::class, 'approveOwner']);
     Route::patch('/admin/owners/{id}/block',   [AdminUserController::class, 'blockOwner']);
 
@@ -150,6 +154,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::patch('/admin/properties/{id}/approve',         [PropertyController::class, 'approve']);
         Route::patch('/admin/properties/{id}/reject',          [PropertyController::class, 'reject']);
+        Route::get('/admin/properties',                         [PropertyController::class, 'adminIndex']);
 
         Route::get('/admin/bookings',                          [AdminBookingController::class, 'index']);
         Route::get('/admin/bookings/{booking}',                [AdminBookingController::class, 'show']);

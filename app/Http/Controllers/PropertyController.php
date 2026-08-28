@@ -14,49 +14,86 @@ class PropertyController extends Controller
     // عرض جميع العقارات
     // ===========================
     public function index(Request $request)
+{
+    $query = Property::with([
+        'owner',
+        'coverImage',
+        'amenities'
+    ])->where('status', 'approved');
+
+    // البحث
+    if ($request->filled('search')) {
+        $query->where(function ($q) use ($request) {
+            $q->where('title', 'like', "%{$request->search}%")
+                ->orWhere('description', 'like', "%{$request->search}%")
+                ->orWhere('address', 'like', "%{$request->search}%");
+        });
+    }
+
+    // المدينة
+    if ($request->filled('city_id')) {
+        $query->where('city_id', $request->city_id);
+    }
+
+    // الجامعة
+    if ($request->filled('university_id')) {
+        $query->where('university_id', $request->university_id);
+    }
+
+    // فلترة بالسعر والنوع (بيعدوا عبر علاقة الوحدات)
+    if ($request->filled('min_price') || $request->filled('max_price') || $request->filled('gender')) {
+        $query->whereHas('units', function ($q) use ($request) {
+            if ($request->filled('min_price')) {
+                $q->where('price', '>=', $request->min_price);
+            }
+            if ($request->filled('max_price')) {
+                $q->where('price', '<=', $request->max_price);
+            }
+            if ($request->filled('gender')) {
+                $q->where('gender', $request->gender);
+            }
+            $q->where('status', 'available');
+        });
+    }
+
+    // الترتيب
+    switch ($request->sort) {
+        case 'most_viewed':
+            $query->orderByDesc('view_count');
+            break;
+
+        case 'newest':
+        default:
+            $query->latest();
+            break;
+    }
+
+    // حد أقصى وأدنى منطقي لعدد النتائج في الصفحة
+    $perPage = min((int) ($request->per_page ?? 10), 50);
+    $perPage = max($perPage, 1);
+
+    return response()->json([
+        'success' => true,
+        'data' => $query->paginate($perPage)
+    ]);
+}
+
+    /** List every property for the admin moderation screen. */
+    public function adminIndex(Request $request)
     {
-        $query = Property::with([
-            'owner',
-            'coverImage',
-            'amenities'
-        ])->where('status', 'approved');
+        $perPage = min(max((int) $request->input('per_page', 50), 1), 100);
+        $query = Property::with(['owner', 'coverImage'])->latest();
 
-        // البحث
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', "%{$request->search}%")
-                    ->orWhere('description', 'like', "%{$request->search}%")
-                    ->orWhere('address', 'like', "%{$request->search}%");
-            });
-        }
-
-        // المدينة
-        if ($request->filled('city_id')) {
-            $query->where('city_id', $request->city_id);
-        }
-
-        // الجامعة
-        if ($request->filled('university_id')) {
-            $query->where('university_id', $request->university_id);
-        }
-
-        // الترتيب
-        switch ($request->sort) {
-            case 'most_viewed':
-                $query->orderByDesc('view_count');
-                break;
-
-            case 'newest':
-            default:
-                $query->latest();
-                break;
+        if ($request->filled('status') && $request->input('status') !== 'all') {
+            $query->where('status', $request->input('status'));
         }
 
         return response()->json([
             'success' => true,
-            'data' => $query->paginate($request->per_page ?? 10)
+            'data' => $query->paginate($perPage),
         ]);
     }
+
 
     // ===========================
     // تفاصيل عقار
@@ -102,6 +139,11 @@ class PropertyController extends Controller
 
             'title' => 'required|string|max:255',
 
+            'property_type' => 'required|in:apartment,room,studio,villa,duplex',
+            'rooms' => 'required|integer|min:1',
+            'bathrooms' => 'required|integer|min:1',
+            'floor' => 'nullable|integer',
+
             'description' => 'required|string',
 
             'address' => 'required|string',
@@ -129,6 +171,11 @@ class PropertyController extends Controller
             'city_id' => $request->city_id,
 
             'title' => $request->title,
+
+            'property_type' => $request->property_type,
+            'rooms' => $request->rooms,
+            'bathrooms' => $request->bathrooms,
+            'floor' => $request->floor,
 
             'description' => $request->description,
 
@@ -210,6 +257,11 @@ class PropertyController extends Controller
 
             'title' => 'sometimes|string|max:255',
 
+            'property_type' => 'sometimes|in:apartment,room,studio,villa,duplex',
+            'rooms' => 'sometimes|integer|min:1',
+            'bathrooms' => 'sometimes|integer|min:1',
+            'floor' => 'nullable|integer',
+
             'description' => 'sometimes|string',
 
             'address' => 'sometimes|string',
@@ -235,6 +287,11 @@ class PropertyController extends Controller
             'city_id' => $request->city_id ?? $property->city_id,
 
             'title' => $request->title ?? $property->title,
+
+            'property_type' => $request->property_type ?? $property->property_type,
+            'rooms' => $request->rooms ?? $property->rooms,
+            'bathrooms' => $request->bathrooms ?? $property->bathrooms,
+            'floor' => $request->has('floor') ? $request->floor : $property->floor,
 
             'description' => $request->description ?? $property->description,
 
@@ -326,7 +383,12 @@ public function destroy($id)
         $property->images()->delete();
 
         try {
-            $property->delete();
+            // Hide the property instead of physically deleting its database row.
+            // Units and bookings remain intact for booking history.
+            Property::query()->whereKey($property->id)->update([
+                'deleted_at' => now(),
+                'updated_at' => now(),
+            ]);
         } catch (QueryException $e) {
             return response()->json([
                 'success' => false,

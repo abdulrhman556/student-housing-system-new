@@ -48,7 +48,7 @@ class BookingService
 
             $activeBookingExists = Booking::query()
                 ->where('student_id', $studentId)
-                ->whereIn('status', ['pending', 'contacting_owner', 'contacting_student'])
+                ->whereIn('status', ['pending', 'contacting_owner', 'contacting_student', 'availability_confirmed'])
                 ->exists();
 
             if ($activeBookingExists) {
@@ -128,13 +128,18 @@ return $booking->fresh([
         }
 
         return DB::transaction(function () use ($bookingModel): Booking {
+            $reservedSlot = $bookingModel->status === 'availability_confirmed';
+
             $bookingModel->status = 'cancelled';
             $bookingModel->save();
 
-            $unit = $bookingModel->unit()->lockForUpdate()->first();
+            // A pending request never reserved a bed, so it must not increase capacity.
+            if ($reservedSlot) {
+                $unit = $bookingModel->unit()->lockForUpdate()->first();
 
-            if ($unit) {
-                $unit->increment('available_count');
+                if ($unit) {
+                    $unit->increment('available_count');
+                }
             }
 
             $this->createHistory($bookingModel, null, 'cancelled', 'Booking cancelled by student.');

@@ -15,10 +15,11 @@ class ProfileController extends Controller
         $request->validate([
             'fname'         => 'sometimes|string|max:255',
             'lname'         => 'sometimes|string|max:255',
-            'phone'         => 'sometimes|string',
         ]);
 
-        $data = $request->only(['fname', 'lname', 'phone']);
+        // Phone, email, gender, national ID and its image are verified account
+        // data, so this endpoint only permits a user to change their name.
+        $data = $request->only(['fname', 'lname']);
 
 
         $user->update($data);

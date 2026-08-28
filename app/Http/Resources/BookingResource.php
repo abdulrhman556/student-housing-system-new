@@ -37,7 +37,10 @@ class BookingResource extends JsonResource
                 return [
                     'id' => $this->unit->id,
                     'type' => $this->unit->unit_type,
+                    'title' => $this->unit->title,
                     'price' => $this->unit->price,
+                    'capacity' => $this->unit->capacity,
+                    'available_count' => $this->unit->available_count,
                 ];
             }),
             'history' => $this->whenLoaded('history', function () {

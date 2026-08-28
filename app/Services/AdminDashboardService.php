@@ -22,6 +22,7 @@ class AdminDashboardService
             'students' => $this->countModel(User::class, ['role' => 'student']),
             'owners' => $this->countModel(User::class, ['role' => 'owner']),
             'admins' => $this->countModel('App\\Models\\Admin', []),
+            'blocked' => $this->countModel(User::class, ['status' => 'blocked']),
         ];
 
         $data['properties'] = [
@@ -60,6 +61,33 @@ class AdminDashboardService
         $data['favorites'] = [
             'total' => $this->countModel(Favorite::class),
         ];
+
+        $data['recent_properties'] = Property::query()
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(fn (Property $property) => [
+                'id' => $property->id,
+                'title' => $property->title,
+                'address' => $property->address,
+                'status' => $property->status,
+                'created_at' => $property->created_at,
+            ])
+            ->values();
+
+        $data['recent_bookings'] = Booking::query()
+            ->with(['student:id,fname,lname,email', 'unit.property:id,title'])
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(fn (Booking $booking) => [
+                'id' => $booking->id,
+                'status' => $booking->status,
+                'student_name' => trim(($booking->student?->fname ?? '') . ' ' . ($booking->student?->lname ?? '')) ?: ($booking->student?->email ?? 'طالب'),
+                'property_title' => $booking->unit?->property?->title ?? 'عقار غير معروف',
+                'created_at' => $booking->created_at,
+            ])
+            ->values();
 
         return $data;
     }

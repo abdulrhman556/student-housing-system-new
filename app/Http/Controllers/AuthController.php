@@ -142,7 +142,23 @@ class AuthController extends Controller
     // ── VERIFY EMAIL ──
     public function verifyEmail(Request $request, $id, $hash)
     {
-        $user = User::findOrFail($id);
+        // The email link is opened through ngrok, which may change the scheme
+        // seen by the local app. Validate the signed route path and parameters
+        // (including expiration) without relying on the forwarded host/scheme.
+        if (! $request->hasValidSignature(absolute: false)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رابط التحقق غير صالح أو انتهت صلاحيته.',
+            ], 403);
+        }
+
+        $user = User::find($id);
+        if (! $user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'المستخدم غير موجود.',
+            ], 404);
+        }
 
         if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             return response()->json([

@@ -68,13 +68,14 @@ class AdminBookingService
      */
 public function confirmAvailability(Booking $booking): Booking
 {
-    if ($booking->status !== 'pending') {
-        throw new RuntimeException(
-            'Only pending bookings can be confirmed.'
-        );
-    }
-
     return DB::transaction(function () use ($booking): Booking {
+        // Lock the booking itself as well as the unit. This prevents two admins
+        // from approving the same request and reserving two slots.
+        $booking = Booking::query()->lockForUpdate()->findOrFail($booking->id);
+
+        if ($booking->status !== 'pending') {
+            throw new RuntimeException('Only pending bookings can be confirmed.');
+        }
 
         $unit = $booking->unit()->lockForUpdate()->first();
 
@@ -99,6 +100,8 @@ public function confirmAvailability(Booking $booking): Booking
 
         $this->createHistory($booking, $adminId, 'availability_confirmed', 'Booking availability confirmed by admin.');
 
+        // One confirmed booking reserves exactly one bed/slot.  The lock above
+        // makes this safe when two admins act on requests at the same time.
         $unit->decrement('available_count');
 
         $this->sendBookingNotification(
@@ -125,13 +128,13 @@ public function confirmAvailability(Booking $booking): Booking
      */
 public function reject(Booking $booking): Booking
 {
-    if ($booking->status !== 'pending') {
-        throw new RuntimeException(
-            'Only pending bookings can be rejected.'
-        );
-    }
-
     return DB::transaction(function () use ($booking): Booking {
+        $booking = Booking::query()->lockForUpdate()->findOrFail($booking->id);
+
+        if ($booking->status !== 'pending') {
+            throw new RuntimeException('Only pending bookings can be rejected.');
+        }
+
         $adminId = auth('admin')->id();
 
         $booking->update([
@@ -165,17 +168,12 @@ public function reject(Booking $booking): Booking
  */
 public function cancel(Booking $booking): Booking
 {
-    if (in_array($booking->status, [
-        'completed',
-        'rejected',
-        'cancelled',
-    ], true)) {
-        throw new RuntimeException(
-            'This booking cannot be cancelled.'
-        );
-    }
-
     return DB::transaction(function () use ($booking): Booking {
+        $booking = Booking::query()->lockForUpdate()->findOrFail($booking->id);
+
+        if (in_array($booking->status, ['completed', 'rejected', 'cancelled'], true)) {
+            throw new RuntimeException('This booking cannot be cancelled.');
+        }
 
         if ($booking->status === 'availability_confirmed') {
 
