@@ -54,7 +54,7 @@ class PaymentService
                 'status' => 'pending',
             ]);
 
-            $this->telegramService->send([
+            \App\Jobs\SendTelegramNotification::dispatch([
                 'chat_id' => config('services.telegram.chat_id'),
                 'message' => 'New payment uploaded for booking #' . $booking->id,
             ]);

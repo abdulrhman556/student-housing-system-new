@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
@@ -162,60 +163,82 @@ class PropertyController extends Controller
 
         ]);
 
-        $property = Property::create([
+        try {
+            $property = DB::transaction(function () use ($request) {
+                $property = Property::create([
 
-            'owner_id' => auth()->id(),
+                    'owner_id' => auth()->id(),
 
-            'university_id' => $request->university_id,
+                    'university_id' => $request->university_id,
 
-            'city_id' => $request->city_id,
+                    'city_id' => $request->city_id,
 
-            'title' => $request->title,
+                    'title' => $request->title,
 
-            'property_type' => $request->property_type,
-            'rooms' => $request->rooms,
-            'bathrooms' => $request->bathrooms,
-            'floor' => $request->floor,
+                    'property_type' => $request->property_type,
+                    'rooms' => $request->rooms,
+                    'bathrooms' => $request->bathrooms,
+                    'floor' => $request->floor,
 
-            'description' => $request->description,
+                    'description' => $request->description,
 
-            'address' => $request->address,
+                    'address' => $request->address,
 
-            'latitude' => $request->latitude,
+                    'latitude' => $request->latitude,
 
-            'longitude' => $request->longitude,
+                    'longitude' => $request->longitude,
 
-            'status' => 'pending',
+                    'status' => 'pending',
 
-        ]);
+                ]);
 
-        // الخدمات
-        if ($request->filled('amenities')) {
+                // الخدمات
+                if ($request->filled('amenities')) {
 
-            $property->amenities()->attach($request->amenities);
+                    $property->amenities()->attach($request->amenities);
 
+                }
+
+                $uploadedPublicIds = [];
+
+                try {
+                    foreach ($request->file('images') as $index => $image) {
+                        $uploaded = cloudinary()->uploadApi()->upload(
+                            $image->getRealPath(),
+                            ['folder' => 'properties']
+                        );
+
+                        $uploadedPublicIds[] = $uploaded['public_id'];
+
+                        $property->images()->create([
+                            'image'         => $uploaded['secure_url'],
+                            'public_id'     => $uploaded['public_id'],
+                            'is_cover'      => $index == 0,
+                            'display_order' => $index + 1,
+                        ]);
+                    }
+                } catch (\Throwable $e) {
+                    foreach ($uploadedPublicIds as $publicId) {
+                        try {
+                            cloudinary()->uploadApi()->destroy($publicId);
+                        } catch (\Throwable $cleanupException) {
+                            report($cleanupException);
+                        }
+                    }
+
+                    throw $e;
+                }
+
+                return $property;
+            });
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء إضافة العقار، يرجى المحاولة مرة أخرى',
+            ], 500);
         }
-
-        // الصور
-        foreach ($request->file('images') as $index => $image) {
-              $uploaded = cloudinary()
-                  ->uploadApi()
-                  ->upload(
-                      $image->getRealPath(),
-                      [
-                          'folder' => 'properties',
-                      ]
-                  );
-
-              $property->images()->create([
-                'image'         => $uploaded['secure_url'],
-                'public_id'     => $uploaded['public_id'],
-                'is_cover'      => $index == 0,
-                'display_order' => $index + 1,
-]);
-
-
-}
 
 
 
@@ -316,30 +339,56 @@ class PropertyController extends Controller
         }
 
             if ($request->hasFile('images')) {
-                foreach ($property->images as $image) {
-               cloudinary()
-              ->uploadApi()
-            ->destroy($image->public_id);
-                }
+                try {
+                    DB::transaction(function () use ($request, $property) {
+                        $oldImages = $property->images()->get();
+                        $newUploadedPublicIds = [];
 
-                $property->images()->delete();
+                        try {
+                            foreach ($request->file('images') as $index => $image) {
+                                $uploaded = cloudinary()->uploadApi()->upload(
+                                    $image->getRealPath(),
+                                    ['folder' => 'properties']
+                                );
 
-                foreach ($request->file('images') as $index => $image) {
-                  $uploaded = cloudinary()
-                 ->uploadApi()
-                 ->upload(
-                     $image->getRealPath(),
-                     [
-                         'folder' => 'properties',
-                     ]
-                 );
+                                $newUploadedPublicIds[] = $uploaded['public_id'];
 
-               $property->images()->create([
-                 'image'         => $uploaded['secure_url'],
-                 'public_id'     => $uploaded['public_id'],
-                 'is_cover'      => $index == 0,
-                 'display_order' => $index + 1,
-]);
+                                $property->images()->create([
+                                    'image'         => $uploaded['secure_url'],
+                                    'public_id'     => $uploaded['public_id'],
+                                    'is_cover'      => $index == 0,
+                                    'display_order' => $index + 1,
+                                ]);
+                            }
+                        } catch (\Throwable $e) {
+                            foreach ($newUploadedPublicIds as $publicId) {
+                                try {
+                                    cloudinary()->uploadApi()->destroy($publicId);
+                                } catch (\Throwable $cleanupException) {
+                                    report($cleanupException);
+                                }
+                            }
+
+                            throw $e;
+                        }
+
+                        foreach ($oldImages as $oldImage) {
+                            try {
+                                cloudinary()->uploadApi()->destroy($oldImage->public_id);
+                            } catch (\Throwable $cleanupException) {
+                                report($cleanupException);
+                            }
+
+                            $oldImage->delete();
+                        }
+                    });
+                } catch (\Throwable $e) {
+                    report($e);
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'تم تحديث بيانات العقار، لكن حدث خطأ أثناء تحديث الصور. حاول رفع الصور مرة أخرى',
+                    ], 500);
                 }
             }
 

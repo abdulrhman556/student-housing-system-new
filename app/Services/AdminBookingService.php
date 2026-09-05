@@ -247,7 +247,7 @@ protected function sendBookingNotification(
 
     protected function sendTelegramNotification(Booking $booking, string $message): void
     {
-        $this->telegramService->send([
+        \App\Jobs\SendTelegramNotification::dispatch([
             'chat_id' => config('services.telegram.chat_id'),
             'message' => 'Booking #' . $booking->id . ': ' . $message,
         ]);

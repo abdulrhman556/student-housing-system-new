@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Amenity;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class AmenityController extends Controller
 {
@@ -12,7 +13,7 @@ class AmenityController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => Amenity::query()->orderBy('name')->get(['id', 'name']),
+            'data' => Cache::remember('amenities.all', now()->addHours(24), fn () => Amenity::query()->orderBy('name')->get(['id', 'name'])),
         ]);
     }
 }

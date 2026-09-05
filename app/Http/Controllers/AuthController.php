@@ -47,6 +47,14 @@ class AuthController extends Controller
 ]);
         $user->sendEmailVerificationNotification();
 
+        if ($user->role === 'owner') {
+            try {
+                app(\App\Services\AdminAlertService::class)->newOwnerRegistration($user);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'تم التسجيل بنجاح. يرجى التحقق من البريد الإلكتروني',

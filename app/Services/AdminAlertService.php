@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\User;
 
 class AdminAlertService
 {
@@ -36,10 +37,30 @@ class AdminAlertService
 🆔 <b>رقم الحجز:</b> #{$booking->id}
 ";
 
-        $response = $this->telegram->sendMessage($message);
+        \App\Jobs\SendTelegramNotification::dispatch($message);
+    }
 
-        if (! $response->successful()) {
-            report('Telegram Error: '.$response->body());
-        }
+    /**
+     * إشعار الأدمن بتسجيل owner جديد محتاج موافقة
+     */
+    public function newOwnerRegistration(User $user): void
+    {
+        $message = "
+🆕 <b>تسجيل مالك سكن جديد</b>
+
+👤 <b>الاسم:</b> {$user->fname} {$user->lname}
+
+📧 <b>الإيميل:</b> {$user->email}
+
+📱 <b>الهاتف:</b> {$user->phone}
+
+🆔 <b>الرقم القومي:</b> " . ($user->national_id ?? 'غير مسجل') . "
+
+📌 <b>الحالة:</b> في انتظار الموافقة
+
+🆔 <b>رقم الحساب:</b> #{$user->id}
+";
+
+        \App\Jobs\SendTelegramNotification::dispatch($message);
     }
 }
