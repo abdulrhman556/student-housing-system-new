@@ -16,9 +16,6 @@ class Payment extends Model
         'payment_method',
         'reference_number',
         'payment_proof',
-        'status',
-        'verified_by',
-        'verified_at',
     ];
 
     public function booking()
@@ -30,5 +27,4 @@ class Payment extends Model
     {
         return $this->belongsTo(Admin::class, 'verified_by');
     }
-    
 }

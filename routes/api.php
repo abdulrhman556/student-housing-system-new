@@ -25,9 +25,11 @@ use App\Http\Controllers\Api\AdminUserController;
 |--------------------------------------------------------------------------
 */
 
-Route::post('/auth/register',    [AuthController::class, 'register']);
-Route::post('/auth/login',       [AuthController::class, 'login']);
-Route::post('/auth/admin-login', [AuthController::class, 'adminLogin']);
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('/auth/register',    [AuthController::class, 'register']);
+    Route::post('/auth/login',       [AuthController::class, 'login']);
+    Route::post('/auth/admin-login', [AuthController::class, 'adminLogin']);
+});
 Route::get('/auth/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
 Route::get('/properties',        [PropertyController::class, 'index']);
@@ -60,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Profile ──
     Route::put('/profile',                   [ProfileController::class, 'update']);
     Route::patch('/profile/change-password', [ProfileController::class, 'changePassword']);
+    Route::get('/profile/national-id-image', [ProfileController::class, 'nationalIdImage']);
 
     // ── Bookings ──
     Route::get('/bookings',                      [BookingController::class, 'index']);
@@ -71,22 +74,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Favorites ──
     Route::apiResource('favorites', FavoriteController::class)
         ->only(['index', 'store', 'destroy']);
-    // Mohammed: Added routes for bookings and favorites
-
-    // Booking
-    Route::get('/bookings', [BookingController::class, 'index']);
-    Route::post('/bookings', [BookingController::class, 'store']);
-    Route::get('/bookings/{booking}', [BookingController::class, 'show']);
-    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
-    Route::get('/bookings/{booking}/history', [BookingController::class, 'history']);
-
-    // Favorites
-    Route::apiResource('favorites', FavoriteController::class)
-        ->only(['index', 'store', 'destroy']);
-    // Route::middleware('auth:sanctum')->group(function () {
-    // Route::apiResource('favorites', FavoriteController::class)
-    //     ->only(['index', 'store', 'destroy']); });
-    // Favorites
 
     // ── Notifications ──
     Route::prefix('notifications')->group(function () {
@@ -100,27 +87,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/payment-settings',                    [PaymentSettingController::class, 'index']);
     Route::post('/payments',                           [PaymentController::class, 'store']);
     Route::get('/bookings/{booking}/payments',         [PaymentController::class, 'index']);
+    Route::get('/payments/{payment}/proof', [PaymentController::class, 'showProof']);
 
     // ── Reviews ──
     Route::post('/reviews',            [ReviewController::class, 'store']);
     Route::patch('/reviews/{review}',  [ReviewController::class, 'update']);
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
 
-    // ── Owner ──
-    // Mohammed: Added routes for bookings and favorites
-
-
-
-
-    // ==========================
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::put('/profile',                 [ProfileController::class, 'update']);
-        Route::patch('/profile/change-password', [ProfileController::class, 'changePassword']);
-    });
-
-
-
-// ==========================
     // Owner
     // ==========================
     Route::middleware('role:owner')->group(function () {
@@ -142,6 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin')->group(function () {
 
     Route::get('/admin/owners/pending',        [AdminUserController::class, 'pendingOwners']);
+    Route::get('/admin/users/{id}/national-id-image', [AdminUserController::class, 'nationalIdImage']);
     Route::get('/admin/students',              [AdminUserController::class, 'students']);
     Route::get('/admin/owners',                [AdminUserController::class, 'owners']);
     Route::patch('/admin/owners/{id}/approve', [AdminUserController::class, 'approveOwner']);

@@ -63,8 +63,8 @@ class BookingService
                 'check_in_date' => $checkInDate,
             ]);
 
-            $this->createHistory($booking, $data['admin_id'] ?? null, 'pending', $data['note'] ?? 'Booking created.');
-            $this->notifyAdmin($booking, $data['admin_id'] ?? null);
+            $this->createHistory($booking, null, 'pending', $data['note'] ?? 'Booking created.');
+            $this->notifyAdmin($booking);
 
 return $booking->fresh([
     'student',
@@ -109,6 +109,10 @@ return $booking->fresh([
     public function history(Booking|int $booking)
     {
         $bookingModel = $this->resolveBooking($booking);
+
+        if (! auth('admin')->check() && (int) $bookingModel->student_id !== (int) auth()->id()) {
+            throw new RuntimeException('You are not authorized to view this booking.');
+        }
 
         return $bookingModel->history()->latest()->get();
     }

@@ -42,6 +42,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -118,25 +126,5 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
-
-
-
-
-'guards' => [
-    'web' => [
-        'driver'   => 'session',
-        'provider' => 'users',
-    ],
-
-    'api' => [
-        'driver'   => 'token',
-        'provider' => 'users',
-    ],
-
-    'admin' => [
-        'driver'   => 'sanctum',
-        'provider' => 'admins',
-    ],
-],
 
 ];

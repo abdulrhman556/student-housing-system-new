@@ -32,7 +32,11 @@ class UnitController extends Controller
     // ── تفاصيل وحدة واحدة (public) ──
     public function show($id)
     {
-        $unit = Unit::with('property')->find($id);
+        $unit = Unit::with('property')
+            ->whereHas('property', function ($q) {
+                $q->where('status', 'approved');
+            })
+            ->find($id);
 
         if (!$unit) {
             return response()->json([

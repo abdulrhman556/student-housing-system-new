@@ -18,8 +18,6 @@ class Booking extends Model
     protected $fillable = [
         'student_id',
         'unit_id',
-        'admin_id',
-        'status',
         'booking_date',
         'check_in_date',
     ];
@@ -49,8 +47,15 @@ class Booking extends Model
         return $this->hasOne(Review::class);
     }
 
-    public function property(): BelongsTo
-{
-    return $this->belongsTo(Property::class);
-}
+    public function property(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Property::class,
+            Unit::class,
+            'id',
+            'id',
+            'unit_id',
+            'property_id'
+        );
+    }
 }

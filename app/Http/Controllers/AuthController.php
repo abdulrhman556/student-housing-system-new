@@ -40,7 +40,7 @@ class AuthController extends Controller
     'status'            => $request->role === 'owner' ? 'pending' : 'active',
     'national_id'       => $request->national_id,
     'national_id_image' => $request->hasFile('national_id_image')
-        ? $request->file('national_id_image')->store('national_ids', 'public')
+        ? $request->file('national_id_image')->store('national_ids', 'local')
         : null,
 
         'university_id'     => $request->role === 'student' ? $request->university_id : null,

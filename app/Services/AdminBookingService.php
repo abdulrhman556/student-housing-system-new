@@ -38,9 +38,14 @@ class AdminBookingService
 
             if ($searchTerm !== '') {
                 $query->whereHas('student', function (Builder $studentQuery) use ($searchTerm): void {
+                    $driver = DB::connection()->getDriverName();
+                    $concatExpression = $driver === 'sqlite'
+                        ? "(fname || ' ' || lname)"
+                        : "CONCAT(fname, ' ', lname)";
+
                     $studentQuery->where('fname', 'like', "%{$searchTerm}%")
                         ->orWhere('lname', 'like', "%{$searchTerm}%")
-                        ->orWhere(DB::raw("CONCAT(fname, ' ', lname)"), 'like', "%{$searchTerm}%")
+                        ->orWhereRaw("{$concatExpression} LIKE ?", ["%{$searchTerm}%"])
                         ->orWhere('email', 'like', "%{$searchTerm}%");
                 })
                     ->orWhereHas('unit.property', function (Builder $propertyQuery) use ($searchTerm): void {

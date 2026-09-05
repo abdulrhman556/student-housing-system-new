@@ -33,11 +33,6 @@ class StoreBookingRequest extends FormRequest
                 'date',
                 'after_or_equal:today',
             ],
-            'admin_id' => [
-                'nullable',
-                'integer',
-                'exists:admins,id',
-            ],
             'note' => [
                 'nullable',
                 'string',
@@ -54,8 +49,6 @@ class StoreBookingRequest extends FormRequest
             'check_in_date.required' => 'The check-in date is required.',
             'check_in_date.date' => 'The check-in date must be a valid date.',
             'check_in_date.after_or_equal' => 'The check-in date must be today or a future date.',
-            'admin_id.integer' => 'The admin ID must be an integer.',
-            'admin_id.exists' => 'The selected admin does not exist.',
             'note.string' => 'The note must be a string.',
             'note.max' => 'The note may not be greater than 1000 characters.',
         ];
