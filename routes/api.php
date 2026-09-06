@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentSettingController;
+use App\Http\Controllers\Api\SiteSettingController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\AdminUserController;
 
@@ -29,6 +30,8 @@ Route::middleware('throttle:5,1')->group(function () {
     Route::post('/auth/register',    [AuthController::class, 'register']);
     Route::post('/auth/login',       [AuthController::class, 'login']);
     Route::post('/auth/admin-login', [AuthController::class, 'adminLogin']);
+    Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/auth/reset-password',  [AuthController::class, 'resetPassword']);
 });
 Route::get('/auth/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
@@ -42,6 +45,7 @@ Route::get('/governorates',               [LocationController::class, 'governora
 Route::get('/governorates/{id}/cities',   [LocationController::class, 'cities']);
 Route::get('/cities/{id}/universities',   [LocationController::class, 'universities']);
 Route::get('/amenities',                  [AmenityController::class, 'index']);
+Route::get('/site-settings', [SiteSettingController::class, 'show']);
 
 Route::get('/properties/{property}/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{review}',              [ReviewController::class, 'show']);
@@ -120,6 +124,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/owners',                [AdminUserController::class, 'owners']);
     Route::patch('/admin/owners/{id}/approve', [AdminUserController::class, 'approveOwner']);
     Route::patch('/admin/owners/{id}/block',   [AdminUserController::class, 'blockOwner']);
+    Route::patch('/admin/students/{id}/block',   [AdminUserController::class, 'blockStudent']);
+    Route::patch('/admin/students/{id}/unblock', [AdminUserController::class, 'unblockStudent']);
+    Route::post('/admin/payment-settings', [PaymentSettingController::class, 'store']);
+    Route::patch('/admin/payment-settings/{paymentSetting}', [PaymentSettingController::class, 'update']);
+    Route::patch('/admin/site-settings', [SiteSettingController::class, 'update']);
 
         Route::get('/admin/dashboard',                          [AdminDashboardController::class, 'index']);
 
