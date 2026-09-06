@@ -108,6 +108,10 @@ public function confirmAvailability(Booking $booking): Booking
         // One confirmed booking reserves exactly one bed/slot.  The lock above
         // makes this safe when two admins act on requests at the same time.
         $unit->decrement('available_count');
+        $unit->refresh();
+        $unit->update([
+            'status' => $unit->available_count > 0 ? 'available' : 'occupied',
+        ]);
 
         $this->sendBookingNotification(
             $booking,
@@ -186,6 +190,10 @@ public function cancel(Booking $booking): Booking
 
             if ($unit) {
                 $unit->increment('available_count');
+                $unit->refresh();
+                $unit->update([
+                    'status' => $unit->available_count > 0 ? 'available' : 'occupied',
+                ]);
             }
         }
 

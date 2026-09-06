@@ -114,12 +114,18 @@ class UnitController extends Controller
             'capacity'        => 'sometimes|integer|min:1',
             'available_count' => 'sometimes|integer|min:0',
             'gender'          => 'sometimes|in:male,female',
-            'status'          => 'sometimes|in:available,reserved,occupied',
         ]);
 
         $unit->update($request->only([
-            'title', 'price', 'capacity', 'available_count', 'gender', 'status'
+            'title', 'price', 'capacity', 'available_count', 'gender'
         ]));
+
+        if ($request->has('available_count')) {
+            $unit->refresh();
+            $unit->update([
+                'status' => $unit->available_count > 0 ? 'available' : 'occupied',
+            ]);
+        }
 
         return response()->json([
             'success' => true,

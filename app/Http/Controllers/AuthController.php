@@ -19,13 +19,16 @@ class AuthController extends Controller
             'lname'    => 'required|string|max:255',
             'email'    => 'required|email|unique:users',
             'password' => 'required|string|min:8',
-            'phone'    => 'required|string',
+            'phone'    => 'required|string|unique:users,phone',
             'gender'   => 'required|in:male,female',
             'role'     => 'required|in:student,owner',
-            'national_id' => 'nullable|string|max:14',
+            'national_id' => 'nullable|string|max:14|unique:users,national_id',
             'national_id_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'university_id'     => 'required_if:role,student|nullable|exists:universities,id',
 
+        ], [
+            'phone.unique' => 'رقم الهاتف هذا مستخدم بالفعل',
+            'national_id.unique' => 'الرقم القومي هذا مسجل بالفعل',
         ]);
 
 
@@ -79,10 +82,10 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if ($user->status !== 'active') {
+        if ($user->status === 'blocked') {
             return response()->json([
                 'success' => false,
-                'message' => 'الحساب مش مفعل',
+                'message' => 'تم حظر هذا الحساب، تواصل مع الدعم',
             ], 403);
         }
 
@@ -102,6 +105,7 @@ class AuthController extends Controller
     'id'   => $user->id,
     'name' => $user->full_name, // ✅ كدا هيجيب الاسم الأول والأخير مدمجين مع بعض بطريقة نضيفة
     'role' => $user->role,
+    'status' => $user->status,
 
             ],
         ]);
