@@ -138,6 +138,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/admin/properties/{id}/approve',         [PropertyController::class, 'approve']);
         Route::patch('/admin/properties/{id}/reject',          [PropertyController::class, 'reject']);
         Route::get('/admin/properties',                         [PropertyController::class, 'adminIndex']);
+        Route::get('/admin/properties/{id}',                    [PropertyController::class, 'adminShow']);
 
         Route::get('/admin/bookings',                          [AdminBookingController::class, 'index']);
         Route::get('/admin/bookings/{booking}',                [AdminBookingController::class, 'show']);

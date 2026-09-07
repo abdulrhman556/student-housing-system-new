@@ -95,6 +95,29 @@ class PropertyController extends Controller
         ]);
     }
 
+    public function adminShow($id)
+    {
+        $property = Property::with([
+            'owner',
+            'images',
+            'coverImage',
+            'amenities',
+            'units',
+        ])->find($id);
+
+        if (!$property) {
+            return response()->json([
+                'success' => false,
+                'message' => 'العقار غير موجود'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $property
+        ]);
+    }
+
 
     // ===========================
     // تفاصيل عقار
