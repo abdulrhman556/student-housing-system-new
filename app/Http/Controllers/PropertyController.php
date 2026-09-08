@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -444,6 +445,19 @@ public function destroy($id)
             'success' => false,
             'message' => 'العقار غير موجود أو ليس من ممتلكاتك'
         ], 404);
+    }
+
+    $hasActiveBookings = Booking::whereHas('unit', function ($q) use ($property) {
+            $q->where('property_id', $property->id);
+        })
+        ->whereNotIn('status', ['completed', 'cancelled'])
+        ->exists();
+
+    if ($hasActiveBookings) {
+        return response()->json([
+            'success' => false,
+            'message' => 'لا يمكن حذف العقار لأن له حجوزات نشطة مرتبطة به. انتظر حتى تكتمل أو تُلغى الحجوزات أولاً.',
+        ], 409);
     }
 
         foreach ($property->images as $image) {
