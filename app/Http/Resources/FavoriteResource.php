@@ -23,6 +23,10 @@ class FavoriteResource extends JsonResource
 
                 'status' => $this->property->status,
 
+                'cover_image' => $this->property->coverImage ? [
+                    'image' => $this->property->coverImage->image,
+                ] : null,
+
             ],
 
             'created_at' => $this->created_at,

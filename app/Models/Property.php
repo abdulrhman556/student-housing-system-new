@@ -27,10 +27,6 @@ class Property extends Model
         'address',
         'latitude',
         'longitude',
-        'status',
-        'rejection_reason',
-        'view_count',
-        'is_featured',
     ];
 
     protected $casts = [

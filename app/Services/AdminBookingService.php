@@ -38,9 +38,14 @@ class AdminBookingService
 
             if ($searchTerm !== '') {
                 $query->whereHas('student', function (Builder $studentQuery) use ($searchTerm): void {
+                    $driver = DB::connection()->getDriverName();
+                    $concatExpression = $driver === 'sqlite'
+                        ? "(fname || ' ' || lname)"
+                        : "CONCAT(fname, ' ', lname)";
+
                     $studentQuery->where('fname', 'like', "%{$searchTerm}%")
                         ->orWhere('lname', 'like', "%{$searchTerm}%")
-                        ->orWhere(DB::raw("CONCAT(fname, ' ', lname)"), 'like', "%{$searchTerm}%")
+                        ->orWhereRaw("{$concatExpression} LIKE ?", ["%{$searchTerm}%"])
                         ->orWhere('email', 'like', "%{$searchTerm}%");
                 })
                     ->orWhereHas('unit.property', function (Builder $propertyQuery) use ($searchTerm): void {
@@ -103,6 +108,10 @@ public function confirmAvailability(Booking $booking): Booking
         // One confirmed booking reserves exactly one bed/slot.  The lock above
         // makes this safe when two admins act on requests at the same time.
         $unit->decrement('available_count');
+        $unit->refresh();
+        $unit->update([
+            'status' => $unit->available_count > 0 ? 'available' : 'occupied',
+        ]);
 
         $this->sendBookingNotification(
             $booking,
@@ -181,6 +190,10 @@ public function cancel(Booking $booking): Booking
 
             if ($unit) {
                 $unit->increment('available_count');
+                $unit->refresh();
+                $unit->update([
+                    'status' => $unit->available_count > 0 ? 'available' : 'occupied',
+                ]);
             }
         }
 
@@ -242,7 +255,7 @@ protected function sendBookingNotification(
 
     protected function sendTelegramNotification(Booking $booking, string $message): void
     {
-        $this->telegramService->send([
+        \App\Jobs\SendTelegramNotification::dispatch([
             'chat_id' => config('services.telegram.chat_id'),
             'message' => 'Booking #' . $booking->id . ': ' . $message,
         ]);

@@ -41,7 +41,7 @@ class PaymentService
 
         $paymentProofPath = null;
         if (! empty($data['payment_proof'])) {
-            $paymentProofPath = $data['payment_proof']->store('payments', 'public');
+            $paymentProofPath = $data['payment_proof']->store('payments', 'local');
         }
 
         return DB::transaction(function () use ($booking, $data, $paymentProofPath): Payment {
@@ -54,7 +54,7 @@ class PaymentService
                 'status' => 'pending',
             ]);
 
-            $this->telegramService->send([
+            \App\Jobs\SendTelegramNotification::dispatch([
                 'chat_id' => config('services.telegram.chat_id'),
                 'message' => 'New payment uploaded for booking #' . $booking->id,
             ]);
@@ -128,6 +128,10 @@ class PaymentService
 
     public function index(Booking $booking)
     {
+        if (! auth('admin')->check() && (int) $booking->student_id !== (int) auth()->id()) {
+            throw new RuntimeException('You are not authorized to view payments for this booking.');
+        }
+
         return Payment::query()
             ->where('booking_id', $booking->id)
             ->latest()

@@ -11,6 +11,7 @@ use App\Models\Payment;
 use App\Services\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
 class PaymentController extends Controller
@@ -148,5 +149,29 @@ class PaymentController extends Controller
                 'message' => $e->getMessage(),
             ], 400);
         }
+    }
+
+    public function showProof(Payment $payment): JsonResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        $payment->loadMissing('booking');
+
+        $isAdmin = auth('admin')->check();
+        $isOwner = $payment->booking && (int) $payment->booking->student_id === (int) auth()->id();
+
+        if (! $isAdmin && ! $isOwner) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized.',
+            ], 403);
+        }
+
+        if (! $payment->payment_proof || ! Storage::disk('local')->exists($payment->payment_proof)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No payment proof uploaded.',
+            ], 404);
+        }
+
+        return Storage::disk('local')->response($payment->payment_proof);
     }
 }

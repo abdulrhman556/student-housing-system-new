@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -56,5 +57,19 @@ class ProfileController extends Controller
             'success' => true,
             'message' => 'تم تغيير كلمة السر بنجاح',
         ]);
+    }
+
+    public function nationalIdImage(Request $request)
+    {
+        $user = $request->user();
+
+        if (! $user->national_id_image || ! Storage::disk('local')->exists($user->national_id_image)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'لا توجد صورة رقم قومي مرفوعة',
+            ], 404);
+        }
+
+        return Storage::disk('local')->response($user->national_id_image);
     }
 }

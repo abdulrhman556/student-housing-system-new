@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 
 class AuthController extends Controller
@@ -19,13 +20,16 @@ class AuthController extends Controller
             'lname'    => 'required|string|max:255',
             'email'    => 'required|email|unique:users',
             'password' => 'required|string|min:8',
-            'phone'    => 'required|string',
+            'phone'    => 'required|string|unique:users,phone',
             'gender'   => 'required|in:male,female',
             'role'     => 'required|in:student,owner',
-            'national_id' => 'nullable|string|max:14',
+            'national_id' => 'nullable|string|max:14|unique:users,national_id',
             'national_id_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'university_id'     => 'required_if:role,student|nullable|exists:universities,id',
 
+        ], [
+            'phone.unique' => 'رقم الهاتف هذا مستخدم بالفعل',
+            'national_id.unique' => 'الرقم القومي هذا مسجل بالفعل',
         ]);
 
 
@@ -40,12 +44,20 @@ class AuthController extends Controller
     'status'            => $request->role === 'owner' ? 'pending' : 'active',
     'national_id'       => $request->national_id,
     'national_id_image' => $request->hasFile('national_id_image')
-        ? $request->file('national_id_image')->store('national_ids', 'public')
+        ? $request->file('national_id_image')->store('national_ids', 'local')
         : null,
 
         'university_id'     => $request->role === 'student' ? $request->university_id : null,
 ]);
         $user->sendEmailVerificationNotification();
+
+        if ($user->role === 'owner') {
+            try {
+                app(\App\Services\AdminAlertService::class)->newOwnerRegistration($user);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -71,10 +83,10 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if ($user->status !== 'active') {
+        if ($user->status === 'blocked') {
             return response()->json([
                 'success' => false,
-                'message' => 'الحساب مش مفعل',
+                'message' => 'تم حظر هذا الحساب، تواصل مع الدعم',
             ], 403);
         }
 
@@ -94,6 +106,7 @@ class AuthController extends Controller
     'id'   => $user->id,
     'name' => $user->full_name, // ✅ كدا هيجيب الاسم الأول والأخير مدمجين مع بعض بطريقة نضيفة
     'role' => $user->role,
+    'status' => $user->status,
 
             ],
         ]);
@@ -181,6 +194,59 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'تم التحقق من البريد الإلكتروني بنجاح',
         ]);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_THROTTLED) {
+            return response()->json([
+                'success' => false,
+                'message' => 'تم إرسال طلب مؤخراً، برجاء الانتظار قليلاً قبل المحاولة مرة أخرى',
+            ], 429);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'لو البريد الإلكتروني مسجل لدينا، ستصلك رسالة تحتوي على رابط إعادة تعيين كلمة السر',
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token'    => 'required|string',
+            'email'    => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم تغيير كلمة السر بنجاح',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'رابط إعادة التعيين غير صالح أو منتهي الصلاحية',
+        ], 400);
     }
 
     public function resendVerification(Request $request)
