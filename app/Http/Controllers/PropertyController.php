@@ -505,10 +505,10 @@ public function destroy($id)
             ], 404);
         }
 
-        $property->update([
+        $property->forceFill([
             'status' => 'approved',
             'rejection_reason' => null,
-        ]);
+        ])->save();
 
         return response()->json([
             'success' => true,
@@ -534,10 +534,10 @@ public function reject(Request $request, $id)
         ], 404);
     }
 
-    $property->update([
+    $property->forceFill([
         'status' => 'rejected',
         'rejection_reason' => $request->rejection_reason,
-    ]);
+    ])->save();
 
     return response()->json([
         'success' => true,

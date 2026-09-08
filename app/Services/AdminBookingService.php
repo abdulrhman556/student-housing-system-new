@@ -98,10 +98,10 @@ public function confirmAvailability(Booking $booking): Booking
 
         $adminId = auth('admin')->id();
 
-        $booking->update([
+        $booking->forceFill([
             'status' => 'availability_confirmed',
             'admin_id' => $adminId,
-        ]);
+        ])->save();
 
         $this->createHistory($booking, $adminId, 'availability_confirmed', 'Booking availability confirmed by admin.');
 
@@ -146,10 +146,10 @@ public function reject(Booking $booking): Booking
 
         $adminId = auth('admin')->id();
 
-        $booking->update([
+        $booking->forceFill([
             'status' => 'rejected',
             'admin_id' => $adminId,
-        ]);
+        ])->save();
 
         $this->createHistory($booking, $adminId, 'rejected', 'Booking rejected by admin.');
 
@@ -199,10 +199,10 @@ public function cancel(Booking $booking): Booking
 
         $adminId = auth('admin')->id();
 
-        $booking->update([
+        $booking->forceFill([
             'status' => 'cancelled',
             'admin_id' => $adminId,
-        ]);
+        ])->save();
 
         $this->createHistory($booking, $adminId, 'cancelled', 'Booking cancelled by admin.');
 
