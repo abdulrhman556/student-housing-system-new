@@ -129,6 +129,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/payment-settings', [PaymentSettingController::class, 'store']);
     Route::patch('/admin/payment-settings/{paymentSetting}', [PaymentSettingController::class, 'update']);
     Route::patch('/admin/site-settings', [SiteSettingController::class, 'update']);
+    Route::post('/admin/amenities', [AmenityController::class, 'store']);
+    Route::delete('/admin/amenities/{id}', [AmenityController::class, 'destroy']);
 
         Route::get('/admin/dashboard',                          [AdminDashboardController::class, 'index']);
 
