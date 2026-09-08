@@ -74,16 +74,16 @@ class PaymentService
         }
 
         return DB::transaction(function () use ($payment, $adminId, $data): Payment {
-            $payment->update([
+            $payment->forceFill([
                 'status' => 'verified',
                 'verified_by' => $adminId,
                 'verified_at' => now(),
-            ]);
+            ])->save();
 
         $booking = $payment->booking;
-            $booking->update([
+            $booking->forceFill([
                 'status' => 'completed',
-            ]);
+            ])->save();
 
             $this->notificationService->send([
                 'user_id' => $payment->booking->student_id,
@@ -108,11 +108,11 @@ class PaymentService
         }
 
         return DB::transaction(function () use ($payment, $adminId, $data): Payment {
-            $payment->update([
+            $payment->forceFill([
                 'status' => 'rejected',
                 'verified_by' => $adminId,
                 'verified_at' => now(),
-            ]);
+            ])->save();
 
             $this->notificationService->send([
                 'user_id' => $payment->booking->student_id,
