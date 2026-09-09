@@ -13,30 +13,33 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('student_id')
-                ->constrained('users');
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->foreignId('unit_id')
                 ->constrained()
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
+
             $table->foreignId('admin_id')
                 ->nullable()
                 ->constrained('admins')
                 ->nullOnDelete();
+
+            $table->date('booking_date');
+            $table->date('check_in_date');
+
             $table->enum('status', [
                 'pending',
-                'contacting_owner',
-                'contacting_student',
                 'availability_confirmed',
                 'completed',
                 'cancelled',
-                'rejected'
+                'rejected',
             ])->default('pending');
-            $table->date('booking_date');
-            $table->date('check_in_date');
+
             $table->softDeletes();
             $table->timestamps();
-
-            $table->index('status');
         });
     }
 
