@@ -206,8 +206,8 @@ class AuthController extends Controller
             $request->only('email')
         );
 
-        if ($status === Password::RESET_LINK_THROTTLED) {
-            return response()->json([
+        if ($status === 'passwords.throttled') {
+                return response()->json([
                 'success' => false,
                 'message' => 'تم إرسال طلب مؤخراً، برجاء الانتظار قليلاً قبل المحاولة مرة أخرى',
             ], 429);
