@@ -7,6 +7,10 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+    use Illuminate\Support\Facades\Mail;
+use App\Mail\Transport\BrevoApiTransport;
+
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +27,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+
+Mail::extend('brevo-api', function () {
+    return new BrevoApiTransport(config('services.brevo.key'));
+     });
+
+     
         // Send users to the frontend verification screen, which calls the
         // existing public verification endpoint and shows the result clearly.
         VerifyEmail::toMailUsing(function ($notifiable) {

@@ -40,4 +40,9 @@ return [
     'chat_id' => env('TELEGRAM_CHAT_ID'),
 ],
 
+'brevo' => [
+    'key' => env('BREVO_API_KEY'),
+],
+
+
 ];
