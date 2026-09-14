@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class AdminUserController extends Controller
@@ -167,5 +169,30 @@ class AdminUserController extends Controller
         }
 
         return Storage::disk('local')->response($user->national_id_image);
+    }
+
+    public function storeAdmin(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:admins,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $admin = Admin::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم إنشاء حساب الأدمن بنجاح',
+            'data' => [
+                'id' => $admin->id,
+                'name' => $admin->name,
+                'email' => $admin->email,
+            ],
+        ], 201);
     }
 }

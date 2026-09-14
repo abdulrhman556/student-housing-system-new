@@ -42,6 +42,16 @@ class PropertyController extends Controller
         $query->where('university_id', $request->university_id);
     }
 
+    // المرافق (لازم العقار يحتوي كل المرافق المختارة)
+    if ($request->filled('amenities')) {
+        $amenityIds = array_filter((array) $request->amenities);
+        foreach ($amenityIds as $amenityId) {
+            $query->whereHas('amenities', function ($q) use ($amenityId) {
+                $q->where('amenities.id', $amenityId);
+            });
+        }
+    }
+
     // فلترة بالسعر والنوع (بيعدوا عبر علاقة الوحدات)
     if ($request->filled('min_price') || $request->filled('max_price') || $request->filled('gender')) {
         $query->whereHas('units', function ($q) use ($request) {

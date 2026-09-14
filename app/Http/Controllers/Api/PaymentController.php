@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Payment;
 use App\Services\PaymentService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
@@ -173,5 +174,20 @@ class PaymentController extends Controller
         }
 
         return Storage::disk('local')->response($payment->payment_proof);
+    }
+
+    public function adminIndex(Request $request): JsonResponse
+    {
+        $status = $request->get('status', 'pending');
+
+        $payments = Payment::with(['booking.student', 'booking.unit.property'])
+            ->when($status !== 'all', fn ($q) => $q->where('status', $status))
+            ->latest()
+            ->paginate(20);
+
+        return response()->json([
+            'success' => true,
+            'data' => $payments,
+        ]);
     }
 }

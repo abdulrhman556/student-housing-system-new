@@ -129,6 +129,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/payment-settings', [PaymentSettingController::class, 'store']);
     Route::patch('/admin/payment-settings/{paymentSetting}', [PaymentSettingController::class, 'update']);
     Route::patch('/admin/site-settings', [SiteSettingController::class, 'update']);
+    Route::post('/admin/admins', [AdminUserController::class, 'storeAdmin']);
+    Route::post('/admin/governorates', [LocationController::class, 'storeGovernorate']);
+    Route::post('/admin/cities', [LocationController::class, 'storeCity']);
+    Route::post('/admin/universities', [LocationController::class, 'storeUniversity']);
     Route::post('/admin/amenities', [AmenityController::class, 'store']);
     Route::delete('/admin/amenities/{id}', [AmenityController::class, 'destroy']);
 
@@ -143,6 +147,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/properties/{id}',                    [PropertyController::class, 'adminShow']);
 
         Route::get('/admin/bookings',                          [AdminBookingController::class, 'index']);
+        Route::get('/admin/payments',                          [PaymentController::class, 'adminIndex']);
         Route::get('/admin/bookings/{booking}',                [AdminBookingController::class, 'show']);
         Route::patch('/admin/bookings/{booking}/confirm',      [AdminBookingController::class, 'confirmAvailability']);
         Route::patch('/admin/bookings/{booking}/reject',       [AdminBookingController::class, 'reject']);
