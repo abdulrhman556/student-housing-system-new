@@ -183,8 +183,11 @@ class PropertyController extends Controller
 
             'images' => 'required|array|min:1',
 
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:8192',
 
+        ], [
+            'images.*.max' => 'حجم كل صورة يجب ألا يتجاوز 8 ميجابايت.',
+            'images.*.uploaded' => 'تعذر رفع الصورة. يجب ألا يتجاوز حجمها 8 ميجابايت.',
         ]);
 
         try {
@@ -323,8 +326,11 @@ class PropertyController extends Controller
 
             'images' => 'nullable|array',
 
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:8192',
 
+        ], [
+            'images.*.max' => 'حجم كل صورة يجب ألا يتجاوز 8 ميجابايت.',
+            'images.*.uploaded' => 'تعذر رفع الصورة. يجب ألا يتجاوز حجمها 8 ميجابايت.',
         ]);
 
         $property->update([

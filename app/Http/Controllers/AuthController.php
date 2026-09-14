@@ -24,7 +24,7 @@ class AuthController extends Controller
             'gender'   => 'required|in:male,female',
             'role'     => 'required|in:student,owner',
             'national_id' => 'nullable|string|max:14|unique:users,national_id',
-            'national_id_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'national_id_image' => 'nullable|image|mimes:jpg,jpeg,png|max:8192',
             'university_id'     => 'required_if:role,student|nullable|exists:universities,id',
 
         ], [

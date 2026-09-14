@@ -29,7 +29,7 @@ class PaymentSettingController extends Controller
             'payment_method' => 'required|in:instapay,vodafone_cash,bank_transfer,fawry',
             'account_name' => 'required|string|max:255',
             'account_number' => 'required|string|max:255',
-            'qr_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'qr_image' => 'nullable|image|mimes:jpg,jpeg,png|max:8192',
             'is_active' => 'sometimes|boolean',
         ]);
 
@@ -54,7 +54,7 @@ class PaymentSettingController extends Controller
             'payment_method' => 'sometimes|in:instapay,vodafone_cash,bank_transfer,fawry',
             'account_name' => 'sometimes|string|max:255',
             'account_number' => 'sometimes|string|max:255',
-            'qr_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'qr_image' => 'nullable|image|mimes:jpg,jpeg,png|max:8192',
             'is_active' => 'sometimes|boolean',
         ]);
 

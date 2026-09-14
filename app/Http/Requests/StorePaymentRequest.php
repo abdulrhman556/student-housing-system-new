@@ -18,7 +18,7 @@ class StorePaymentRequest extends FormRequest
             'amount' => ['required', 'numeric', 'regex:/^\d{1,8}(\.\d{1,2})?$/', 'between:0.01,99999999.99'],
             'payment_method' => ['required', 'string', 'in:cash,card,transfer'],
             'reference_number' => ['nullable', 'string', 'max:255'],
-            'payment_proof' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'payment_proof' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png', 'max:8192'],
         ];
     }
 

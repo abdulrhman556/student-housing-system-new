@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use Illuminate\Http\Request;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class PropertyImageController extends Controller
 {
@@ -22,16 +24,26 @@ class PropertyImageController extends Controller
 
         $request->validate([
             'images'   => 'required|array|min:1',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:8192',
+        ], [
+            'images.*.max' => 'حجم كل صورة يجب ألا يتجاوز 8 ميجابايت.',
+            'images.*.uploaded' => 'تعذر رفع الصورة. يجب ألا يتجاوز حجمها 8 ميجابايت.',
         ]);
 
         $lastOrder = $property->images()->max('display_order') ?? 0;
 
         foreach ($request->file('images') as $index => $image) {
+
+            // ── ضغط الصورة قبل الرفع لـ Cloudinary ──
+            $compressedPath = $this->compressImage($image);
+
             $uploaded = cloudinary()->uploadApi()->upload(
-                $image->getRealPath(),
+                $compressedPath,
                 ['folder' => 'properties']
             );
+
+            // مسح الملف المؤقت بعد الرفع
+            @unlink($compressedPath);
 
             $property->images()->create([
                 'image'         => $uploaded['secure_url'],
@@ -46,6 +58,34 @@ class PropertyImageController extends Controller
             'message' => 'تم إضافة الصور بنجاح',
             'data'    => $property->load('images'),
         ]);
+    }
+
+    // ── ضغط الصورة (Resize + Quality) وترجع مسار مؤقت جاهز للرفع ──
+    private function compressImage($file, int $maxWidth = 1200, int $quality = 75): string
+    {
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read($file->getRealPath());
+
+        // تصغير العرض لحد 1200 بكسل مع الحفاظ على النسبة، من غير تكبير للصور الأصغر
+        $image->scaleDown(width: $maxWidth);
+
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        $tempDir = storage_path('app/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        if ($extension === 'png') {
+            $tempPath = $tempDir . '/' . uniqid() . '.png';
+            $image->toPng()->save($tempPath);
+        } else {
+            $tempPath = $tempDir . '/' . uniqid() . '.jpg';
+            $image->toJpeg($quality)->save($tempPath);
+        }
+
+        return $tempPath;
     }
 
     // ── حذف صورة معينة ──
@@ -92,11 +132,9 @@ class PropertyImageController extends Controller
             ], 404);
         }
 
-        // شيل الـ cover من الصورة القديمة
         PropertyImage::where('property_id', $image->property_id)
             ->update(['is_cover' => false]);
 
-        // حط الـ cover على الصورة الجديدة
         $image->update(['is_cover' => true]);
 
         return response()->json([
