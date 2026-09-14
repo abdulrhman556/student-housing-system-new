@@ -19,6 +19,7 @@ class BookingResource extends JsonResource
             'status' => $this->status,
             'booking_date' => $this->booking_date,
             'check_in_date' => $this->check_in_date,
+            'quantity' => $this->quantity,
             'student' => $this->whenLoaded('student', function () {
                 return [
                     'id' => $this->student->id,

@@ -26,6 +26,7 @@ class BookingService
 
         $unitId = $data['unit_id'] ?? null;
         $checkInDate = $data['check_in_date'] ?? null;
+        $quantity = (int) ($data['quantity'] ?? 1);
 
         if (! $unitId) {
             throw new InvalidArgumentException('The unit ID is required.');
@@ -35,15 +36,15 @@ class BookingService
             throw new InvalidArgumentException('The check-in date is required.');
         }
 
-        return DB::transaction(function () use ($data, $studentId, $unitId, $checkInDate): Booking {
+        return DB::transaction(function () use ($data, $studentId, $unitId, $checkInDate, $quantity): Booking {
             $unit = Unit::query()->findOrFail($unitId);
 
             if ($unit->status !== 'available') {
                 throw new RuntimeException('This unit is not available.');
             }
 
-            if ((int) $unit->available_count <= 0) {
-                throw new RuntimeException('No available places.');
+            if ((int) $unit->available_count < $quantity) {
+                throw new RuntimeException('العدد المطلوب غير متاح حالياً في هذه الوحدة.');
             }
 
             $activeBookingExists = Booking::query()
@@ -58,6 +59,7 @@ class BookingService
             $booking = Booking::query()->create([
                 'student_id' => $studentId,
                 'unit_id' => $unit->id,
+                'quantity' => $quantity,
                 'status' => 'pending',
                 'booking_date' => now()->toDateString(),
                 'check_in_date' => $checkInDate,

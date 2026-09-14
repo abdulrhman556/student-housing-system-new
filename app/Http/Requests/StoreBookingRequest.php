@@ -28,6 +28,11 @@ class StoreBookingRequest extends FormRequest
                 'integer',
                 'exists:units,id',
             ],
+            'quantity' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
             'check_in_date' => [
                 'required',
                 'date',

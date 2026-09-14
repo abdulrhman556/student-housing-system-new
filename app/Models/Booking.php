@@ -18,6 +18,7 @@ class Booking extends Model
     protected $fillable = [
         'student_id',
         'unit_id',
+        'quantity',
         'booking_date',
         'check_in_date',
     ];
