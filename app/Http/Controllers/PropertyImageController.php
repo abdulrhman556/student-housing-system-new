@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class PropertyImageController extends Controller
 {
-    // ── إضافة صور لعقار موجود ──
     public function store(Request $request, $propertyId)
     {
         $property = Property::where('owner_id', auth()->id())->find($propertyId);
@@ -34,15 +34,19 @@ class PropertyImageController extends Controller
 
         foreach ($request->file('images') as $index => $image) {
 
-            // ── ضغط الصورة قبل الرفع لـ Cloudinary ──
+            // ── لوج مؤقت: الحجم قبل الضغط ──
+            Log::info('BEFORE compress: ' . $image->getSize() . ' bytes, path: ' . $image->getRealPath());
+
             $compressedPath = $this->compressImage($image);
+
+            // ── لوج مؤقت: الحجم بعد الضغط ──
+            Log::info('AFTER compress: ' . filesize($compressedPath) . ' bytes, path: ' . $compressedPath);
 
             $uploaded = cloudinary()->uploadApi()->upload(
                 $compressedPath,
                 ['folder' => 'properties']
             );
 
-            // مسح الملف المؤقت بعد الرفع
             @unlink($compressedPath);
 
             $property->images()->create([
@@ -60,15 +64,17 @@ class PropertyImageController extends Controller
         ]);
     }
 
-    // ── ضغط الصورة (Resize + Quality) وترجع مسار مؤقت جاهز للرفع ──
     private function compressImage($file, int $maxWidth = 1200, int $quality = 75): string
     {
         $manager = new ImageManager(new Driver());
 
         $image = $manager->read($file->getRealPath());
 
-        // تصغير العرض لحد 1200 بكسل مع الحفاظ على النسبة، من غير تكبير للصور الأصغر
+        Log::info('Original dimensions: ' . $image->width() . 'x' . $image->height());
+
         $image->scaleDown(width: $maxWidth);
+
+        Log::info('After scaleDown dimensions: ' . $image->width() . 'x' . $image->height());
 
         $extension = strtolower($file->getClientOriginalExtension());
 
@@ -88,7 +94,7 @@ class PropertyImageController extends Controller
         return $tempPath;
     }
 
-    // ── حذف صورة معينة ──
+    // باقي الدوال زي ما هي (destroy, setCover) من غير أي تعديل
     public function destroy($id)
     {
         $image = PropertyImage::whereHas('property', function ($q) {
@@ -118,7 +124,6 @@ class PropertyImageController extends Controller
         ]);
     }
 
-    // ── تغيير الـ cover ──
     public function setCover($id)
     {
         $image = PropertyImage::whereHas('property', function ($q) {
