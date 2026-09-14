@@ -90,10 +90,8 @@ public function confirmAvailability(Booking $booking): Booking
             );
         }
 
-        if ((int) $unit->available_count <= 0) {
-            throw new RuntimeException(
-                'No available places left for this unit.'
-            );
+        if ((int) $unit->available_count < (int) $booking->quantity) {
+            throw new RuntimeException('عدد الأسرّة المتاحة أقل من الكمية المطلوبة في هذا الحجز.');
         }
 
         $adminId = auth('admin')->id();
@@ -105,9 +103,7 @@ public function confirmAvailability(Booking $booking): Booking
 
         $this->createHistory($booking, $adminId, 'availability_confirmed', 'Booking availability confirmed by admin.');
 
-        // One confirmed booking reserves exactly one bed/slot.  The lock above
-        // makes this safe when two admins act on requests at the same time.
-        $unit->decrement('available_count');
+        $unit->decrement('available_count', $booking->quantity);
         $unit->refresh();
         $unit->update([
             'status' => $unit->available_count > 0 ? 'available' : 'occupied',
@@ -189,7 +185,7 @@ public function cancel(Booking $booking): Booking
             $unit = $booking->unit()->lockForUpdate()->first();
 
             if ($unit) {
-                $unit->increment('available_count');
+                $unit->increment('available_count', $booking->quantity);
                 $unit->refresh();
                 $unit->update([
                     'status' => $unit->available_count > 0 ? 'available' : 'occupied',
