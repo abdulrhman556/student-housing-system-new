@@ -13,6 +13,8 @@ trait CompressesImages
 
         $image = $manager->read($file->getRealPath());
 
+        // Apply the phone's EXIF orientation before resizing and encoding.
+        $image->orient();
         $image->scaleDown(width: $maxWidth);
 
         $extension = strtolower($file->getClientOriginalExtension());

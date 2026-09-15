@@ -8,6 +8,7 @@
      "require": {
         "php": "^8.2",
          "ext-gd": "*",
+         "ext-exif": "*",
         "ext-pdo_mysql": "*",
         "cloudinary-labs/cloudinary-laravel": "^3.0",
         "intervention/image": "^3.11",
