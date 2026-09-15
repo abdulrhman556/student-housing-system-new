@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Traits\CompressesImages;
 
 class PropertyController extends Controller
 {
+    use CompressesImages;
+
     // ===========================
     // عرض جميع العقارات
     // ===========================
@@ -240,10 +243,16 @@ class PropertyController extends Controller
 
                 try {
                     foreach ($request->file('images') as $index => $image) {
+
+                        // ── ضغط الصورة قبل الرفع لـ Cloudinary ──
+                        $compressedPath = $this->compressImage($image);
+
                         $uploaded = cloudinary()->uploadApi()->upload(
-                            $image->getRealPath(),
+                            $compressedPath,
                             ['folder' => 'properties']
                         );
+
+                        @unlink($compressedPath);
 
                         $uploadedPublicIds[] = $uploaded['public_id'];
 
@@ -386,10 +395,16 @@ class PropertyController extends Controller
 
                         try {
                             foreach ($request->file('images') as $index => $image) {
+
+                                // ── ضغط الصورة قبل الرفع لـ Cloudinary ──
+                                $compressedPath = $this->compressImage($image);
+
                                 $uploaded = cloudinary()->uploadApi()->upload(
-                                    $image->getRealPath(),
+                                    $compressedPath,
                                     ['folder' => 'properties']
                                 );
+
+                                @unlink($compressedPath);
 
                                 $newUploadedPublicIds[] = $uploaded['public_id'];
 
