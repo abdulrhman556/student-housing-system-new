@@ -26,7 +26,7 @@ use App\Http\Controllers\Api\AdminUserController;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('throttle:5,1')->group(function () {
+Route::middleware('throttle:1000,1')->group(function () {
     Route::post('/auth/register',    [AuthController::class, 'register']);
     Route::post('/auth/login',       [AuthController::class, 'login']);
     Route::post('/auth/admin-login', [AuthController::class, 'adminLogin']);
